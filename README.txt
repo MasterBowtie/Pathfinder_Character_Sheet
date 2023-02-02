@@ -1,0 +1,1 @@
+This Pathfinder Character Sheet is made and maintained by MasterBowtie

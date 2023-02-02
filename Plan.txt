@@ -1,0 +1,132 @@
+
+
+Menu
+    Build New Character
+        Ancestry
+        Background
+        Class
+        Skills
+        Spells
+        Feats
+        Equipment
+
+    Import Character
+        Level Character
+        Edit Character
+
+    View Character
+        Ability Scores
+        Saves & Stats
+        Skills
+        Strikes
+        Spells
+        Feats
+        Equipment
+        All
+    Save Character
+    Exit
+
+Character Sheet
+    Info
+        Ancestry
+            Heritage
+        Background
+        Class
+        Level
+        XP
+    Ability Scores
+        Strength
+        Dexterity
+        Constitution
+        Intelligence
+        Wisdom
+        Charisma
+    Saves & Stats
+        Armor Class
+        Hit Points
+        Perception
+        Class DC
+        Fortitude
+        Reflex
+        Will
+        Movement
+    Skills
+        Acrobatics
+        Arcana
+        Athletics
+        Crafting
+        Deception
+        Diplomacy
+        Intimidation
+        Lore
+        Lore
+        Medicine
+        Nature
+        Occultism
+        Performance
+        Religion
+        Society
+        Stealth
+        Survival
+        Thievery
+        (Languages)
+    Strikes
+        Melee
+        Ranged
+        Magic
+    Feats
+        Ancestry
+        Skill
+        Class
+        General
+        Bonus
+    Equipment
+        Money
+            Copper
+            Silver
+            Gold
+            Platinum
+        Weapons
+            Type
+            Traits
+        Armor
+            Heavy
+            Medium
+            Light
+            Shield
+        Consumables
+        Magical
+        Other
+    Spells
+        Tradition
+        Spell DC & Att
+        Cantrip
+        Level 1
+        Level 2
+        Level 3
+        Level 4
+        Level 5
+        Level 6
+        Level 7
+        Level 8
+        Level 9
+        Level 10
+        Innate
+        Focus
+        Rituals
+        Prepared
+
+
+Leveling and Base Chart
+    Alchemist
+    Barbarian
+    Bard
+    Champion
+    Cleric
+    Druid
+    Fighter
+    Monk
+    Ranger
+    Rogue
+    Sorcerer
+    Wizard
