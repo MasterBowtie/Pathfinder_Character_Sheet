@@ -1,10 +1,12 @@
 import random
 from reference.constants import ANCESTORS, SCORELIST
+from import_functions.ancestries_constants import ANCENTRIES
+
 
 
 def setAncestry(character, choice, randomize=False):
     ancestor = None
-
+    
     for item in ANCESTORS:
         if choice == item:
             ancestor = item
