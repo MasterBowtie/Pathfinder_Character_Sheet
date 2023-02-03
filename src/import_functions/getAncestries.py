@@ -2,6 +2,12 @@ import requests
 import json
 import os
 
+def editDescription(description):
+    print(description)
+    input("Press Enter to Continue")
+    return description
+    pass
+
 def fetchAncestries(relPath):
     print("Fetching Ancestries...")
     try:
@@ -14,8 +20,11 @@ def fetchAncestries(relPath):
         r = requests.get(f"{URL}/ancestry", headers=HEADERS)
         print("Connecting")
         for item in r.json()["results"]:
-            newItem = json.dumps(item)
             name = item['name']
+            description = item["system"]["description"]["value"]
+            item["system"]["description"]["value"] = editDescription(description)
+            newItem = json.dumps(item,indent=3)\
+                .replace('true', 'True').replace('false','False')
             fileString = f"{relPath}ancestries/ancestries_{name}.txt"
             newFile = open(fileString, mode="w")
             #print(newItem.find('\u2011'), name)
@@ -39,7 +48,8 @@ def fetchAncestryFeatures(relPath):
         r = requests.get(f"{URL}/ancestryFeature", headers=HEADERS)
         print("Connecting")
         for item in r.json()["results"]:
-            newItem = json.dumps(item)
+            newItem = json.dumps(item,indent=3)\
+                .replace('true', 'True').replace('false','False')
             name = item['name']
             fileString = f"{relPath}ancestryFeatures/ancestryFeature_{name}.txt"
             newFile = open(fileString, mode="w")
@@ -70,21 +80,7 @@ def getAncestries(relPath):
     file = open(f"{relPath}ancestries.py", "w")
     string = "ANCENTRIES = {"
     for item in ancestryList:
-        temp = json.dumps(ancestryList[item],indent=3)\
-            .replace('true', 'True').replace('false','False') \
-            .replace("<li>", "\t- ").replace("</li>", "") \
-            .replace("<p>", "").replace("</p>", "") \
-            .replace("<em>", "").replace("</em>", "").replace("<hr />", "") \
-            .replace("<h2>", "\\n\\t").replace("</h2>", "\\n") \
-            .replace("<h3>", "\\n\\t").replace("</h3>", "\\n") \
-            .replace("<ul>", "").replace("</ul>", "")\
-            .replace("<strong>", "").replace("</strong>",": ")\
-            .replace('<span style="text-decoration: underline;">Sample Names</span>', "\\n")\
-            .replace('<h2 style=', "").replace('"border-bottom: 1px solid var(--color-underline-header);', "")\
-            .replace('">', "t")
-        #  '<h2 style="border-bottom: 1px solid var(--color-underline-header);">'
-
-
+        temp = json.dumps(ancestryList[item],indent=3)
         string += f"\"{item}\": {temp},\n"
     string += "}"
     print(string, file=file)

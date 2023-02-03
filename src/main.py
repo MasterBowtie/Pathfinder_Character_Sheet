@@ -1,7 +1,7 @@
 from src.reference.classConstants import LEVELING
 from data.characterData import CharacterData
 from builder.setClass import setClass
-from builder.setAncestory import setAncestry, chooseAncestry
+from builder.setAncestory import setAncestry
 from builder.newCharacter import newCharacter
 
 def printLevelChart():
@@ -54,5 +54,5 @@ Priority:
 '''
 
 if __name__ == '__main__':
-    chooseAncestry()
+    newCharacter()
     pass
