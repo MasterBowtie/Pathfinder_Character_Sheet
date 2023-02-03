@@ -1,4 +1,4 @@
-
+Notes: Read Description into file, run through program to remove HTML noise.
 
 Menu
     Build New Character
