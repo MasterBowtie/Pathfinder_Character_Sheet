@@ -1,6 +1,7 @@
-from import_functions import Ancestries
+from import_functions.getAncestries import fetchAncestries, fetchAncestryFeatures
 
 if __name__ == "__main__":
     relPath = "import_functions/"
-    Ancestries.fetchAncestries(relPath)
+    fetchAncestries(relPath)
+    fetchAncestryFeatures(relPath)
 
