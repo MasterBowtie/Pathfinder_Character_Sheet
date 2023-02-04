@@ -1,0 +1,33 @@
+{
+  "Dwarf": {
+    "source": "Core Rulebook pg. 35",
+    "trait": {
+      "Dwarf Trait": "A creature with this trait is a member of the dwarf ancestry. Dwarves are stout folk who often live underground and typically have darkvision. An ability with this trait can be used or selected only by dwarves. An item with this trait is created and used by dwarves.",
+      "Humanoid Trait": "Humanoid creatures reason and act much like humans. They typically stand upright and have two arms and two legs."
+    },
+    "languages": [
+      "Common",
+      "Dwarven"
+    ],
+    "addLanguages": [
+      "Gnomish",
+      "Goblin",
+      "Jotun",
+      "Orcish",
+      "Terran",
+      "Undercommon"
+    ],
+    "boosts": [
+      "Constitution",
+      "Wisdom",
+      "Free"
+    ],
+    "flaws": [
+      "Charisma"
+    ],
+    "hp": "10",
+    "size": "Medium",
+    "speed": "20 feet",
+    "vision": "Darkvision"
+  }
+}

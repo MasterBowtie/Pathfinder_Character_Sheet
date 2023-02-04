@@ -1,7 +1,6 @@
 import requests
 import json
 
-
 def editDescription(name, description):
     tempfile1 = open("temp.txt", mode="w")
     print(f"{name}\n {description}", file=tempfile1)
