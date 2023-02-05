@@ -2,11 +2,86 @@ import json
 import sys
 import requests
 
-def buildJson(array):
-    pass
+def __buildJson(array, charJson):
+    array.append("eof")
 
+    if array[0] != " ":
+        name = array[0]
+    else:
+        raise LookupError()
+    if "Heritage" in name:
+        raise ImportError
+    charJson[name] = {}
+    __setUpJson(charJson[name])
+
+
+    description = ""
+    index = 0
+    while array[index] != "eof":
+        if "class=\"trait\"" in array[index]:
+            list1 = array[index].split("\"")
+            charJson[name]["trait"][list1[1]] = list1[5]
+        if array[index] == "Source":
+            charJson[name]["source"] = array[index + 1]
+            array.pop(index + 1)
+        if array[index].endswith("Mechanics"):
+            charJson[name]["description"] = description
+            charJson[name]["hp"] = array[index + 2]
+        if charJson[name]["source"] != '' and charJson[name]["hp"] == '':
+            description += f"{array[index]}\n"
+        if array[index]== "Size":
+            charJson[name]["size"] = array[index + 1]
+        if array[index] == "Speed":
+            charJson[name]["speed"] = array[index + 1]
+        if array[index] == "Ability Boosts":
+            if "Two free" in array[index + 1]:
+                charJson[name]["boosts"].append("Free")
+                charJson[name]["boosts"].append("Free")
+                array.pop(index + 1)
+            count = 1
+            while array[index + count] != "":
+                charJson[name]["boosts"].append(array[index + count])
+                count += 1
+        if array[index] == "Ability Flaw(s)":
+            count = 1
+            while array[index + count] != "":
+                charJson[name]["flaws"].append(array[index + count])
+                count += 1
+        if array[index] == "Languages":
+            count = 1
+            while not array[index + count].startswith("Additional"):
+                charJson[name]["languages"].append(array[index + count])
+                count += 1
+        if array[index].startswith("Additional languages"):
+            list1 = array[index].split(' ')
+            for item in list1:
+                if item.endswith(","):
+                    charJson[name]["addLanguages"].append(item.strip(","))
+            array.pop(index)
+            
+        if array[index] == 'Darkvision' or array[index] == "Low-Light Vision":
+            charJson[name]["vision"][array[index]] = array[index + 1]
+            array.pop(index)
+            array.pop(index)
+
+        if len(charJson[name]["addLanguages"]) != 0 and array[index] != "eof" and array[index] != "":
+            print(f"Testing: {array[index]}")
+            charJson[name]["extras"][array[index]] = array[index + 1]
+            array.pop(index)
+            array.pop(index)
+
+        index += 1
+        if array[index] == "":
+            array.pop(index)
+
+    print(json.dumps(charJson[name], indent=2))
+
+# \u2013 == -
+# \u2011 == -
+# \u2014 == -
+# \u2019 == '
 def discectHTML(html):
-    html = html.replace('\ue50e', "").replace('\u2011', "")
+    html = html.replace("\u2013", "-").replace("\u2011", "-").replace("\u2014", "-").replace("\u2019", "'")
     file = html.split("\n")
     write = False
     file2 = []
@@ -48,179 +123,44 @@ def discectHTML(html):
             file.pop(0)
             break
         file.pop(0)
-    count = 0
-    for line in file:
-        print(f"{count} {line}")
-        count += 1
+
+    return file
 
 
-
-def discectHTML1(html, url):
-    html = html.replace('\ue50e', "").replace('\u2011', "")
-    file = open("temp.txt", mode="w")
-    print(html, file=file)
-    file.close()
-
-    file = open("temp.txt")
-    file2 = open("temp2.txt", mode="w")
-    newText = ""
-    line = file.readline().strip()
-    count = 0
-    write = False
-
-    while "</html>" not in line:
-        if "id=\"main\"" in line:
-            write = True
-        if write and "</div>" in line:
-            write = False
-        if "\n" != line and write:
-            newText += line
-            count += 1
-        line = file.readline()
-
-    newText += "\neof\n"
-
-    print(newText.replace("<", "\n").replace(">", "\n"), file=file2)
-    file.close()
-    file2.close()
-
-    file = open("temp2.txt")
-    file2 = open("temp.txt", mode="w")
-    newText = ""
-    line = file.readline().strip()
-    while "eof" not in line:
-        if len(line.strip()) == 0 or line.startswith("/") or line.startswith("h2") or line.startswith("br") \
-                or line.startswith("img") or line.startswith(","):
-            line = file.readline()
-            continue
-        else:
-            newText += line
-            line = file.readline()
-    newText += "\neof\n"
-    if "ID=6" in url:
-        print(newText)
-    print(newText, file=file2)
-    file.close()
-    file2.close()
-
-    dict = {}
-    name = ""
-    found = False
-
-    newText = ""
-    file2 = open("temp.txt")
-    count = 0
-    line = file2.readline()
-    while "eof" not in line:
-        if url in line and not found:
-            line = file2.readline()
-            if line.strip() != "u":
-                name = line.strip()
-                dict[name] = {}
-                file2.seek(0)
-                found = True
-                __setUPJSON(dict[name])
-            line = file2.readline()
-
-        if "Source" == line.strip():
-            line = file2.readline()
-            while line.strip() != "i":
-                line = file2.readline()
-                if line.strip() == "i":
-                    nextLine = file2.readline()
-                    dict[name]["source"] = nextLine.strip()
-
-                    break
-
-            line = "Description\n"
-
-        if "class=\"trait\"" in line and found:
-            list1 = line.split("\"")
-            dict[name]["trait"][list1[1]] = list1[5]
-            line = file2.readline()
-
-        if "Hit Points" == line.strip():
-            line = file2.readline().strip()
-            dict[name]["hp"] = line
-            line = file2.readline()
-
-        if "Size" == line.strip():
-            line = file2.readline().strip()
-            dict[name]["size"] = line
-            line = file2.readline()
-
-        if "Speed" == line.strip():
-            line = file2.readline().strip()
-            dict[name]["speed"] = line
-            line = file2.readline()
-
-        if "Ability Boosts" == line.strip():
-            line = file2.readline()
-            if line.strip() == "Two free ability boosts":
-                dict[name]["boosts"].append("Free")
-                dict[name]["boosts"].append("Free")
-                line = file2.readline()
-            else:
-                while line.strip() != "Ability Flaw(s)":
-                    dict[name]["boosts"].append(line.strip())
-                    line = file2.readline()
-
-        if "Ability Flaw(s)" == line.strip():
-            line = file2.readline()
-            while line.strip() != "Languages":
-                dict[name]["flaws"].append(line.strip())
-                line = file2.readline()
-
-        if "Languages" == line.strip():
-            line = file2.readline().strip()
-            while "a href=\"Languages.aspx?ID=" in line:
-                line = file2.readline()
-                dict[name]["languages"].append(line.strip())
-                line = file2.readline().strip()
-
-        if "Additional languages" in line:
-            line = file2.readline()
-            while "Languages.aspx?ID=" in line:
-                line = file2.readline()
-                dict[name]["addLanguages"].append(line.strip())
-                line = file2.readline()
-
-        newText += f"{line}"
-        count += 1
-        line = file2.readline()
-    file2.close()
-    if "Darkvision" in newText:
-        dict[name]["vision"] = "Darkvision"
-    elif "Low-Light Vision" in newText:
-        dict[name]["vision"] = "Low-Light Vision"
-    else:
-        dict[name]["vision"] = "Normal"
-    newText += "\neof\n"
-
-    #print(newText)
-    file = open(f"{name}.json", mode="w")
-    string = json.dumps(dict, indent=2)
-    #print(string)
-    print(string, file=file)
-    file.close()
-
-def __setUPJSON(param):
+def __setUpJson(param):
     param["source"] = ""
     param["trait"] = {}
-    param["languages"] = []
-    param["addLanguages"] = []
+    param["description"] = ''
+    param["hp"] = ''
+    param["size"] = ''
+    param["speed"] = ''
     param["boosts"] = []
     param["flaws"] = []
+    param["languages"] = []
+    param["addLanguages"] = []
     param["vision"] = {}
     param["extras"] = {}
 
+
+
+# Error on
+# https://2e.aonprd.com/Ancestries.aspx?ID=15
+# https://2e.aonprd.com/Ancestries.aspx?ID=18
+# https://2e.aonprd.com/Ancestries.aspx?ID=27
+# https://2e.aonprd.com/Ancestries.aspx?ID=38
+# https://2e.aonprd.com/Ancestries.aspx?ID=42
+# https://2e.aonprd.com/Ancestries.aspx?ID=48
+# https://2e.aonprd.com/Ancestries.aspx?ID=49
+# https://2e.aonprd.com/Ancestries.aspx?ID=53
+# https://2e.aonprd.com/Ancestries.aspx?ID=56
 
 if __name__ == "__main__":
     baseURL = "https://2e.aonprd.com/"
     count = 1
     accepted = []
     failed = []
-    while count < 11:
+    jsonFile = {}
+    while count < 60:
         url = f"Ancestries.aspx?ID={count}"
         try:
             response = requests.get(f"{baseURL}{url}")
@@ -230,16 +170,12 @@ if __name__ == "__main__":
             else:
                 print(f"Accepted:{baseURL}{url}")
                 accepted.append(f"{baseURL}{url}")
-                discectHTML(response.text)
+                file = discectHTML(response.text)
+                __buildJson(file, jsonFile)
+                #input("Input \"E\" to Continue")
         except Exception as e:
             print(f"Error: {baseURL}{url} is not accessible because {e}", file=sys.stderr)
-
         count += 1
 
-
-
-
-    '''
-        
-        
-    '''
+    file = open("temp.txt", mode="w")
+    print(json.dumps(jsonFile, indent=2),file=file)
