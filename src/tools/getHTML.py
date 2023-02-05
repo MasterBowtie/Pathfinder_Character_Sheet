@@ -5,10 +5,7 @@ import requests
 def __buildJson(array, charJson):
     array.append("eof")
 
-    if array[0] != " ":
-        name = array[0]
-    else:
-        raise LookupError()
+    name = array[0]
     if "Heritage" in name:
         raise ImportError
     charJson[name] = {}
@@ -16,38 +13,40 @@ def __buildJson(array, charJson):
 
 
     description = ""
+    extras = []
     index = 0
-    while array[index] != "eof":
+    resume = True
+    while resume:
         if "class=\"trait\"" in array[index]:
             list1 = array[index].split("\"")
             charJson[name]["trait"][list1[1]] = list1[5]
         if array[index] == "Source":
             charJson[name]["source"] = array[index + 1]
-            array.pop(index + 1)
+            array[index + 1] = "Heading: Description"
         if array[index].endswith("Mechanics"):
             charJson[name]["description"] = description
             charJson[name]["hp"] = array[index + 2]
         if charJson[name]["source"] != '' and charJson[name]["hp"] == '':
             description += f"{array[index]}\n"
-        if array[index]== "Size":
+        if array[index] == "Heading: Size":
             charJson[name]["size"] = array[index + 1]
-        if array[index] == "Speed":
+        if array[index] == "Heading: Speed":
             charJson[name]["speed"] = array[index + 1]
-        if array[index] == "Ability Boosts":
+        if array[index] == "Heading: Ability Boosts":
             if "Two free" in array[index + 1]:
                 charJson[name]["boosts"].append("Free")
                 charJson[name]["boosts"].append("Free")
-                array.pop(index + 1)
+            else:
+                count = 1
+                while array[index + count] != "Heading: Ability Flaw(s)":
+                    charJson[name]["boosts"].append(array[index + count])
+                    count += 1
+        if array[index] == "Heading: Ability Flaw(s)":
             count = 1
-            while array[index + count] != "":
-                charJson[name]["boosts"].append(array[index + count])
-                count += 1
-        if array[index] == "Ability Flaw(s)":
-            count = 1
-            while array[index + count] != "":
+            while array[index + count] != "Heading: Languages":
                 charJson[name]["flaws"].append(array[index + count])
                 count += 1
-        if array[index] == "Languages":
+        if array[index] == "Heading: Languages":
             count = 1
             while not array[index + count].startswith("Additional"):
                 charJson[name]["languages"].append(array[index + count])
@@ -58,23 +57,25 @@ def __buildJson(array, charJson):
                 if item.endswith(","):
                     charJson[name]["addLanguages"].append(item.strip(","))
             array.pop(index)
-            
-        if array[index] == 'Darkvision' or array[index] == "Low-Light Vision":
-            charJson[name]["vision"][array[index]] = array[index + 1]
-            array.pop(index)
-            array.pop(index)
 
-        if len(charJson[name]["addLanguages"]) != 0 and array[index] != "eof" and array[index] != "":
-            print(f"Testing: {array[index]}")
-            charJson[name]["extras"][array[index]] = array[index + 1]
-            array.pop(index)
-            array.pop(index)
+        if len(charJson[name]["addLanguages"]) != 0 and array[index] != "eof" :
+            extras.append(array[index])
 
-        index += 1
-        if array[index] == "":
-            array.pop(index)
+        if array[index] != "eof":
+            index += 1
+        else:
+            resume = False
 
-    print(json.dumps(charJson[name], indent=2))
+    if len(extras) != 0:
+        section = ""
+        for line in extras:
+            if line.startswith("Heading"):
+                section = line.split(":")[1]
+                charJson[name]["extras"][section] = ""
+            else:
+                charJson[name]["extras"][section] += f"{line}\n"
+
+    print(f"{json.dumps(charJson[name], indent=2)} {name} ")
 
 # \u2013 == -
 # \u2011 == -
@@ -97,33 +98,39 @@ def discectHTML(html):
 
     string = ""
     for line in file2:
-        line = line.replace("<span", "\n<span").replace("</span>", "\n</span>\n")
-        line = line.replace("alt=", "\nalt=").replace("<b", "\n<b").replace("</b>", "</b>\n")
-        line  = line.replace("</h3>", "</h3>\n").replace("</h2>", "</h2>\n").replace("</h1>", "</h>\n")
-        string += line.replace("<h", "\n<h")
-    file = string.split("\n")
+        line = line.replace("<span", "\n<span").replace("</span>", "\n</span>\n").replace("<li>", "\n\t- ")\
+            .replace("alt=", "\nalt=>").replace("<b", "\n<b").replace("</b>", "</b>\n")\
+            .replace("</h3>", "<split>\n").replace("</h2>", "<split>\n").replace("</h1>", "<split>\n") \
+            .replace("<h1", "\n<split>Heading:<").replace("<h2", "\n<split>Heading: <").replace("&nbsp;", "")
+        string += line
+    file = string.split("<split>")
 
     newText = ""
     for line in file:
-        if "span" in line or "" == line or "div" in line:
-           pass
-        else:
-            write = True
-            for char in line:
-                if char == "<":
-                    write = False
-                if write:
-                    newText += char
-                if char == ">":
-                    write = True
-            newText += "\n"
+        write = True
+        for char in line:
+            if char == "<":
+                write = False
+            if write:
+                newText += char
+            if char == ">":
+                write = True
+        newText += "\n"
     file = newText.split("\n")
-    while True:
-        if "alt=" in file[0]:
-            file.pop(0)
-            break
-        file.pop(0)
 
+    count = 0
+    found = False
+    while count < len(file):
+        if len(file[count]) == 0:
+            file.pop(count)
+        elif "src=" in file[count]:
+            found = True
+            file.pop(count)
+        elif not found:
+            file.pop(count)
+        else:
+            #print(f"{count} {file[count]}")
+            count += 1
     return file
 
 
@@ -138,7 +145,6 @@ def __setUpJson(param):
     param["flaws"] = []
     param["languages"] = []
     param["addLanguages"] = []
-    param["vision"] = {}
     param["extras"] = {}
 
 
@@ -155,12 +161,19 @@ def __setUpJson(param):
 # https://2e.aonprd.com/Ancestries.aspx?ID=56
 
 if __name__ == "__main__":
+    debug = True
     baseURL = "https://2e.aonprd.com/"
-    count = 1
     accepted = []
     failed = []
     jsonFile = {}
-    while count < 60:
+    if debug:
+        count = 1
+        target = 10
+    else:
+        count = 1
+        target = 100
+
+    while count < target:
         url = f"Ancestries.aspx?ID={count}"
         try:
             response = requests.get(f"{baseURL}{url}")
@@ -172,7 +185,7 @@ if __name__ == "__main__":
                 accepted.append(f"{baseURL}{url}")
                 file = discectHTML(response.text)
                 __buildJson(file, jsonFile)
-                #input("Input \"E\" to Continue")
+                input("Input \"E\" to Continue")
         except Exception as e:
             print(f"Error: {baseURL}{url} is not accessible because {e}", file=sys.stderr)
         count += 1
