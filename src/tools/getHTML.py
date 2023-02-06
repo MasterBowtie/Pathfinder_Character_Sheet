@@ -22,7 +22,8 @@ def __buildJson(array, charJson):
             charJson[name]["trait"][list1[1]] = list1[5]
         if array[index] == "Source":
             charJson[name]["source"] = array[index + 1]
-            array[index + 1] = "Heading: Description"
+            array[index + 1] = "Description"
+            index += 1
         if array[index].endswith("Mechanics"):
             charJson[name]["description"] = description
             charJson[name]["hp"] = array[index + 2]
@@ -66,6 +67,8 @@ def __buildJson(array, charJson):
         else:
             resume = False
 
+    # https://2e.aonprd.com/Ancestries.aspx?ID=18
+    # format Table
     if len(extras) != 0:
         section = ""
         for line in extras:
@@ -168,7 +171,7 @@ if __name__ == "__main__":
     jsonFile = {}
     if debug:
         count = 1
-        target = 10
+        target = 19
     else:
         count = 1
         target = 100
