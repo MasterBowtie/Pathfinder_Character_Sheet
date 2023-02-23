@@ -2,52 +2,52 @@ import json
 import sys
 import requests
 
-def __buildJson(array, charJson):
-    array.append("eof")
+URL = "https://2e.aonprd.com/"
 
+def __buildJson(array, charJson):
     name = array[0]
     if "Heritage" in name:
         raise ImportError
     charJson[name] = {}
     __setUpJson(charJson[name])
-
+    #TODO: Adjust to new Alt Text method
 
     description = ""
     extras = []
     index = 0
     resume = True
     while resume:
+        print(f"{index} {array[index]}")
         if "class=\"trait\"" in array[index]:
             list1 = array[index].split("\"")
             charJson[name]["trait"][list1[1]] = list1[5]
-        if array[index] == "Source":
-            charJson[name]["source"] = array[index + 1]
-            array[index + 1] = "Description"
+        if array[index].startswith("Source"):
+            charJson[name]["source"] = array[index].removeprefix("Source").strip()
             index += 1
         if array[index].endswith("Mechanics"):
             charJson[name]["description"] = description
             charJson[name]["hp"] = array[index + 2]
         if charJson[name]["source"] != '' and charJson[name]["hp"] == '':
-            description += f"{array[index]}\n"
-        if array[index] == "Heading: Size":
+            description += f"{array[index]}\n".replace("Heading: ", "\t")
+        if array[index] == "Heading:Size":
             charJson[name]["size"] = array[index + 1]
-        if array[index] == "Heading: Speed":
+        if array[index] == "Heading:Speed":
             charJson[name]["speed"] = array[index + 1]
-        if array[index] == "Heading: Ability Boosts":
+        if array[index] == "Heading:Ability Boosts":
             if "Two free" in array[index + 1]:
                 charJson[name]["boosts"].append("Free")
                 charJson[name]["boosts"].append("Free")
             else:
                 count = 1
-                while array[index + count] != "Heading: Ability Flaw(s)":
+                while array[index + count] != "Heading:Ability Flaw(s)" and array[index + count] != "Heading:Languages":
                     charJson[name]["boosts"].append(array[index + count])
                     count += 1
-        if array[index] == "Heading: Ability Flaw(s)":
+        if array[index] == "Heading:Ability Flaw(s)":
             count = 1
-            while array[index + count] != "Heading: Languages":
+            while array[index + count] != "Heading:Languages":
                 charJson[name]["flaws"].append(array[index + count])
                 count += 1
-        if array[index] == "Heading: Languages":
+        if array[index] == "Heading:Languages":
             count = 1
             while not array[index + count].startswith("Additional"):
                 charJson[name]["languages"].append(array[index + count])
@@ -79,6 +79,9 @@ def __buildJson(array, charJson):
                 charJson[name]["extras"][section] += f"{line}\n"
 
     print(f"{json.dumps(charJson[name], indent=2)} {name} ")
+    file = open(f"{name}.json", mode="w")
+    print(f"{json.dumps(charJson[name], indent=2)}", file=file)
+    file.close()
 
 # \u2013 == -
 # \u2011 == -
@@ -92,21 +95,35 @@ def discectHTML(html):
 
     # filter lines...
     for line in file:
-        if "id=\"main\"" in line:
-            write = True
         if write and "</div>" in line:
             write = False
         if "" != line.strip() and write:
             file2.append(line.strip())
+        if "id=\"main\"" in line:
+            write = True
 
     string = ""
     for line in file2:
         line = line.replace("<span", "\n<span").replace("</span>", "\n</span>\n").replace("<li>", "\n\t- ")\
-            .replace("alt=", "\nalt=>").replace("<b", "\n<b").replace("</b>", "</b>\n")\
+            .replace("<tr>", "\n<tr>").replace("</td><td>","|").replace("<br", "\n<br")\
             .replace("</h3>", "<split>\n").replace("</h2>", "<split>\n").replace("</h1>", "<split>\n") \
-            .replace("<h1", "\n<split>Heading:<").replace("<h2", "\n<split>Heading: <").replace("&nbsp;", "")
+            .replace("<h", "\n<split>Heading:<").replace("&nbsp;", "")
         string += line
     file = string.split("<split>")
+
+    file2 = ""
+    for line in file:
+        file2 += line
+    file = file2.split("\n")
+
+    file2 = ""
+    for line in file:
+        file2 += f"{line}\n"
+        if line.startswith("<span alt="):
+            items = parseAltText(line)
+            file2 += f"\ntrait: {items['alt'].split(' ')[0]}\n"
+            file2 += f"\nalt: {items['title']}\n"
+    file = file2.split("\n")
 
     newText = ""
     for line in file:
@@ -120,21 +137,36 @@ def discectHTML(html):
                 write = True
         newText += "\n"
     file = newText.split("\n")
+    file.append("eof")
 
     count = 0
     found = False
     while count < len(file):
-        if len(file[count]) == 0:
-            file.pop(count)
-        elif "src=" in file[count]:
-            found = True
-            file.pop(count)
-        elif not found:
+        if len(file[count].strip()) == 0:
             file.pop(count)
         else:
-            #print(f"{count} {file[count]}")
+            print(f"{count} {file[count]}")
             count += 1
     return file
+
+def parseAltText(line):
+    items = {}
+    write = False
+    item = ""
+    key = ""
+    for char in line:
+        if char == "=":
+            key = item
+            item = ""
+        if char == "\"":
+            write = not write
+        if not write and char == " ":
+            if key != "" and item != "<span":
+                items[key.strip()] = item.removesuffix('><a').strip("\"")
+            item = ""
+        if char != "=":
+            item += char
+    return items
 
 
 def __setUpJson(param):
@@ -150,12 +182,47 @@ def __setUpJson(param):
     param["addLanguages"] = []
     param["extras"] = {}
 
+def runMain(count, target, jsonFile):
+    while count < target:
+        url = f"Ancestries.aspx?ID={count}"
+        try:
+            response = requests.get(f"{URL}{url}")
+            if not response.ok:
+                print(f"Error: crawl({URL}{url}) {response.status_code} {response.reason}", file=sys.stderr)
+            else:
+                print(f"Accepted:{URL}{url}")
+                file = discectHTML(response.text)
+                __buildJson(file, jsonFile)
+                input("Input \"E\" to Continue")
+        except Exception as e:
+            print(f"Error: {URL}{url} is not accessible because {e}", file=sys.stderr)
+        count += 1
 
+def runDebug(jsonFile):
+    testList = []
+#    testList.append("Ancestries.aspx?ID=1")
+#    testList.append("Ancestries.aspx?ID=6")
+#    testList.append("Ancestries.aspx?ID=16")
+#    testList.append("Ancestries.aspx?ID=18")
+#    testList.append("Ancestries.aspx?ID=27")
+    testList.append("Ancestries.aspx?ID=38")
+
+    for url in testList:
+        try:
+            response = requests.get(f"{URL}{url}")
+            if not response.ok:
+                print(f"Error: crawl({URL}{url}) {response.status_code} {response.reason}", file=sys.stderr)
+            else:
+                print(f"Accepted:{URL}{url}")
+                file = discectHTML(response.text)
+                __buildJson(file, jsonFile)
+        except Exception as e:
+            print(f"Error: {URL}{url} is not accessible because {e}", file=sys.stderr)
 
 # Error on
-# https://2e.aonprd.com/Ancestries.aspx?ID=15
-# https://2e.aonprd.com/Ancestries.aspx?ID=18
-# https://2e.aonprd.com/Ancestries.aspx?ID=27
+# https://2e.aonprd.com/Ancestries.aspx?ID=15   Resolved
+# https://2e.aonprd.com/Ancestries.aspx?ID=18   Resolved
+# https://2e.aonprd.com/Ancestries.aspx?ID=27   Resolved
 # https://2e.aonprd.com/Ancestries.aspx?ID=38
 # https://2e.aonprd.com/Ancestries.aspx?ID=42
 # https://2e.aonprd.com/Ancestries.aspx?ID=48
@@ -165,33 +232,9 @@ def __setUpJson(param):
 
 if __name__ == "__main__":
     debug = True
-    baseURL = "https://2e.aonprd.com/"
-    accepted = []
-    failed = []
     jsonFile = {}
+
     if debug:
-        count = 1
-        target = 19
+        runDebug(jsonFile)
     else:
-        count = 1
-        target = 100
-
-    while count < target:
-        url = f"Ancestries.aspx?ID={count}"
-        try:
-            response = requests.get(f"{baseURL}{url}")
-            if not response.ok:
-                failed.append(f"{baseURL}{url}")
-                print(f"Error: crawl({baseURL}{url}) {response.status_code} {response.reason}", file=sys.stderr)
-            else:
-                print(f"Accepted:{baseURL}{url}")
-                accepted.append(f"{baseURL}{url}")
-                file = discectHTML(response.text)
-                __buildJson(file, jsonFile)
-                input("Input \"E\" to Continue")
-        except Exception as e:
-            print(f"Error: {baseURL}{url} is not accessible because {e}", file=sys.stderr)
-        count += 1
-
-    file = open("temp.txt", mode="w")
-    print(json.dumps(jsonFile, indent=2),file=file)
+        runMain(1, 60, jsonFile)
