@@ -53,6 +53,7 @@ HITPOINTS = ['Class', 'Ancestry', 'Max', 'Current', 'Temporary']
 from data.skill import Skill
 from reference.constants import SKILLSLIST, SAVES, PROFICIENCYLIST, ANCESTORS, SCORELIST
 from reference.classConstants import CLASSES
+from data.ancestry import Ancestry
 
 
 class CharacterData:
@@ -109,7 +110,7 @@ class CharacterData:
     def getSpeed(self):
         return self.__Speed
 
-    def setAncestry(self, value):
+    def setAncestry(self, value: Ancestry):
         self.__Ancestry = value
 
     def setSize(self, value):

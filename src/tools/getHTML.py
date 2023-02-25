@@ -1,5 +1,7 @@
 import json
 import sys
+import time
+
 import requests
 
 URL = "https://2e.aonprd.com/"
@@ -288,5 +290,10 @@ if __name__ == "__main__":
 
     else:
         ImportHTML().runMain(1, 60, jsonFile)
+        time.sleep(5)
+        print(f"\nTotal Ancestries: {len(jsonFile)}")
         for character in jsonFile:
             print(character)
+        file = open("../reference/ancestries.py", mode="w")
+        print(f"ANCESTRIES = {json.dumps(jsonFile, indent=1)}", file=file)
+        file.close()
