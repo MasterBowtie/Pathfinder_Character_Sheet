@@ -1,7 +1,6 @@
 from src.reference.classConstants import LEVELING
 from data.characterData import CharacterData
 from builder.setClass import setClass
-from builder.setAncestory import setAncestry
 from builder.newCharacter import newCharacter
 
 def printLevelChart():
@@ -11,27 +10,6 @@ def printLevelChart():
         num += 1
         itemList = "\t" + str(num) + ": " + ', '.join(level)
         print(itemList)
-
-def playWithCharacer():
-    randomize = not True
-    print("Building character... \n")
-    character = CharacterData()
-    setAncestry(character,"Human", randomize=randomize)
-    setClass(character, "Monk", randomize=randomize)
-    character.finished()
-    print("\nfinished!")
-
-    print("\n\nCharacter Stats\n")
-    print(f"HP: {character.getHP()} \nSize: {character.getSize()} \nSpeed: {character.getSpeed()} \n")
-
-    character.printScores()
-    print()
-    print(f"Class DC: {character.getClassDC().getBonus()}")
-    print(f"ArmorClass: {character.getArmorClass()}\n")
-    character.printSaves()
-    print()
-    character.printSkills()
-    print()
 
 '''
 Tommy's review

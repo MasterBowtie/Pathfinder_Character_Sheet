@@ -1,5 +1,5 @@
 import random
-from reference.constants import ANCESTORS, SCORELIST
+from reference.constants import SCORELIST
 from reference.ancestries import ANCESTRIES
 
 def chooseAncestry():

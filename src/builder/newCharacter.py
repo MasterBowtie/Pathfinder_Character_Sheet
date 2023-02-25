@@ -32,68 +32,36 @@ def newCharacter_old():
 def chooseScores(ancestry):
     # TODO: fill Free scores
     usedList = [False, False, False, False, False, False]
-    for item in range(len(ancestry["boosts"])):
-        if ancestry["boosts"][item] == "Free":
+    boosts = ancestry.getBoosts()
+    for item in range(len(boosts)):
+        if boosts[item] == "Free":
             accepted = False
             while not accepted:
                 print("Scores:")
                 for i in range(len(SCORELIST)):
                     print(f"\t{i + 1}: {SCORELIST[i]}")
-                choice = input("Chose a Score: ")
+                choice = input("Choose a Score to be boosted: ")
                 try:
-                    if not usedList[int(choice)]:
-                        choice = SCORELIST[int(choice)]
+                    if not usedList[int(choice) - 1]:
+                        choice = SCORELIST[int(choice) - 1]
                         accepted = True
+                    else:
+                        print("You cannot boost that Score!")
                 except:
                     print("That is not a valid choice")
-            ancestry["boosts"][item] = choice
+            boosts[item] = choice
 
         else:
             for i in range(len(SCORELIST)):
-                if SCORELIST[i] == ancestry["boosts"][item]:
+                if SCORELIST[i] == boosts[item]:
                     usedList[i] = True
-            print(ancestry["boosts"][item])
-
-'''
-   
-        for item in ANCESTORS:
-            if choice == item:
-                ancestor = item
-        if ancestor != None:
-            print(f"{ancestor} has:", end="\n\t")
-            character.setAncestry(ancestor)
-            info = ANCESTORS.get(ancestor)
-            usedList = [False, False, False, False, False, False]
-
-            string = []
-            for i in range(len(SCORELIST)):
-                if info[i] > 0:
-                    character.setScore(SCORELIST[i], character.getScore(SCORELIST[i]) + info[i])
-                    usedList[i] = True
-                    string.append(f"{SCORELIST[i]} Boost")
-                elif info[i] < 0:
-                    character.setScore(SCORELIST[i], character.getScore(SCORELIST[i]) + info[i])
-                    string.append(f"{SCORELIST[i]} Flaw")
-            string = '\n\t'.join(string)
-            print(string)
-
-            if randomize:
-                randomizeScores(character, info[6], usedList)
-            else:
-                pickScores(character, info[6], usedList)
-
-            character.setSize(info[8])
-            character.setSpeed(info[9])
-
-        else:
-            raise NameError("That is not a valid ancestry")
-'''
+            print(f"Boosted: {boosts[item]}")
 
 def newCharacter():
     character = CharacterData()
     ancestry, name = chooseAncestry()
     ancestry = Ancestry(ancestry, name)
-    print("Chosen ancestry:")
+    print(f"Chosen ancestry: {ancestry.getAncestry()}")
     chooseScores(ancestry)
-    print(ancestry.getAncestry(), ancestry.getSize())
+    print(ancestry.getAncestry(), ancestry.getBoosts())
     character.setAncestry(ancestry)

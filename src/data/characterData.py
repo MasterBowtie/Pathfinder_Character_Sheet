@@ -51,14 +51,16 @@ SPELLINFO = ['Name', 'Level', 'Traits', 'Tradition', ['Cast', 'Actions', 'Compon
 HITPOINTS = ['Class', 'Ancestry', 'Max', 'Current', 'Temporary']
 '''
 from data.skill import Skill
-from reference.constants import SKILLSLIST, SAVES, PROFICIENCYLIST, ANCESTORS, SCORELIST
+from reference.constants import SKILLSLIST, SAVES, PROFICIENCYLIST, SCORELIST
 from reference.classConstants import CLASSES
 from data.ancestry import Ancestry
 
 
 class CharacterData:
     def __init__(self):
-        self.__Scores = {"Str": 10, "Dex": 10, "Con": 10, "Int": 10, "Wis": 10, "Cha": 10}
+        self.__Scores = {}
+        for item in SCORELIST:
+            self.__Scores[item] = 10
 
         self.__Ancestry = None
         self.__Background = None
