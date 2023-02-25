@@ -266,23 +266,23 @@ class ImportHTML():
     # https://2e.aonprd.com/Ancestries.aspx?ID=53
     # https://2e.aonprd.com/Ancestries.aspx?ID=56
 
-if __name__ == "__main__":
+def main():
     debug = False
     jsonFile = {}
 
     if debug:
         testList = []
-        #testList.append("Ancestries.aspx?ID=1")
-        #testList.append("Ancestries.aspx?ID=6")
-        #testList.append("Ancestries.aspx?ID=16")
-        #testList.append("Ancestries.aspx?ID=18")
-        #testList.append("Ancestries.aspx?ID=27")
-        #testList.append("Ancestries.aspx?ID=38")
-        #testList.append("Ancestries.aspx?ID=42")
-        #testList.append("Ancestries.aspx?ID=48")
-        #testList.append("Ancestries.aspx?ID=49")
-        #testList.append("Ancestries.aspx?ID=53")
-        #testList.append("Ancestries.aspx?ID=56") #Resolved?
+        # testList.append("Ancestries.aspx?ID=1")
+        # testList.append("Ancestries.aspx?ID=6")
+        # testList.append("Ancestries.aspx?ID=16")
+        # testList.append("Ancestries.aspx?ID=18")
+        # testList.append("Ancestries.aspx?ID=27")
+        # testList.append("Ancestries.aspx?ID=38")
+        # testList.append("Ancestries.aspx?ID=42")
+        # testList.append("Ancestries.aspx?ID=48")
+        # testList.append("Ancestries.aspx?ID=49")
+        # testList.append("Ancestries.aspx?ID=53")
+        # testList.append("Ancestries.aspx?ID=56") #Resolved?
         index = 0
         for url in testList:
             character = ImportHTML().runDebug(url, jsonFile)
@@ -297,3 +297,6 @@ if __name__ == "__main__":
         file = open("../reference/ancestries.py", mode="w")
         print(f"ANCESTRIES = {json.dumps(jsonFile, indent=1)}", file=file)
         file.close()
+
+if __name__ == "__main__":
+    main()

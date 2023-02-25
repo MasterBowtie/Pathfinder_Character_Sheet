@@ -1,7 +1,5 @@
-from import_functions.getAncestries import fetchAncestries, fetchAncestryFeatures
+from import_functions import getHTML
 
 if __name__ == "__main__":
-    relPath = "import_functions/"
-    fetchAncestries(relPath)
-    fetchAncestryFeatures(relPath)
+    getHTML.main()
 
