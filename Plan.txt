@@ -1,14 +1,16 @@
-Notes: Read Description into file, run through program to remove HTML noise.
+TODO:
+    Import Heritages
 
 Menu
-    Build New Character
-        Ancestry
-        Background
-        Class
-        Skills
-        Spells
-        Feats
-        Equipment
+[-] Build New Character
+[X]     Ancestry
+[ ]         Heritage
+[ ]     Background
+[ ]     Class
+[ ]     Skills
+[ ]     Spells
+[ ]     Feats
+[ ]     Equipment
 
     Import Character
         Level Character
@@ -116,17 +118,3 @@ Character Sheet
         Rituals
         Prepared
 
-
-Leveling and Base Chart
-    Alchemist
-    Barbarian
-    Bard
-    Champion
-    Cleric
-    Druid
-    Fighter
-    Monk
-    Ranger
-    Rogue
-    Sorcerer
-    Wizard

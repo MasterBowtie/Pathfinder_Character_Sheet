@@ -30,7 +30,6 @@ def newCharacter_old():
     print()
 
 def chooseScores(ancestry):
-    # TODO: fill Free scores
     usedList = [False, False, False, False, False, False]
     boosts = ancestry.getBoosts()
     for item in range(len(boosts)):

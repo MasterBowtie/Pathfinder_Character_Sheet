@@ -57,7 +57,7 @@ from data.ancestry import Ancestry
 
 
 class CharacterData:
-    def __init__(self, ancestry: Ancestry, ):
+    def __init__(self, ancestry: Ancestry):
         self.__Scores = {}
         for item in SCORELIST:
             self.__Scores[item] = 10

@@ -104,9 +104,7 @@ def selectBooks(sources, selection):
             print("That is not a valid response")
     return selection
 
-
-
-
+'''
 def pickScores(character, count, usedList):
     print(f"You get to choose {count} Ability boosts")
     while count > 0:
@@ -128,3 +126,4 @@ def randomizeScores(character, count, usedList):
             usedList[SCORELIST.index(stat)] = True
             count -= 1
             print(f"Picked Score: {stat}")
+'''
