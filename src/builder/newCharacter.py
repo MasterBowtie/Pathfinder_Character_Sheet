@@ -58,10 +58,10 @@ def chooseScores(ancestry):
             print(f"Boosted: {boosts[item]}")
 
 def newCharacter():
-    character = CharacterData()
     ancestry, name = chooseAncestry()
     ancestry = Ancestry(ancestry, name)
     print(f"Chosen ancestry: {ancestry.getAncestry()}")
     chooseScores(ancestry)
     print(ancestry.getAncestry(), ancestry.getBoosts())
-    character.setAncestry(ancestry)
+    character = CharacterData(ancestry)
+    print(character.getAncestry())

@@ -57,16 +57,14 @@ from data.ancestry import Ancestry
 
 
 class CharacterData:
-    def __init__(self):
+    def __init__(self, ancestry: Ancestry, ):
         self.__Scores = {}
         for item in SCORELIST:
             self.__Scores[item] = 10
 
-        self.__Ancestry = None
+        self.__Ancestry = ancestry
         self.__Background = None
         self.__Class = None
-        self.__Size = None
-        self.__Speed = 30
         self.__HitPoints = 0
 
         self.__Level = 0
@@ -104,27 +102,10 @@ class CharacterData:
         return self.__Class
 
     def getAncestry(self):
-        return self.__Ancestry
-
-    def getSize(self):
-        return self.__Size
-
-    def getSpeed(self):
-        return self.__Speed
-
-    def setAncestry(self, value: Ancestry):
-        self.__Ancestry = value
-
-    def setSize(self, value):
-        self.__Size = value
-
-    def setSpeed(self, value):
-        self.__Speed = value
+        return self.__Ancestry.getAncestry()
 
     def setClass(self, value):
         self.__Class = value
-
-
 
     ### Armor Section ###
 
@@ -229,7 +210,7 @@ class CharacterData:
     ### Level and XP ####
 
     def setHP(self):
-        hp = ANCESTORS.get(self.getAncestry())[7]
+        hp = self.__Ancestry.getHP()
         hp += CLASSES.get(self.getClass())[1] * self.getLevel()
         # TODO: Add feat Bonus Option
         self.__HitPoints = hp
