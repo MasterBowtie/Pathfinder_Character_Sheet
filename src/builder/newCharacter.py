@@ -1,4 +1,4 @@
-from src.reference.classConstants import LEVELING
+from src.constants.classConstants import LEVELING
 from data.characterData import CharacterData
 from builder.setClass import setClass
 from builder.setAncestory import chooseAncestry

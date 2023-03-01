@@ -1,9 +1,9 @@
 import json
 
 def buildAncestryJson(array, charJson):
-    name = array[4]
+    name = array[5]
     if "Heritage" in name:
-        raise ImportError
+        return buildHeritageJson(array, charJson)
     charJson[name] = {}
     setUpJson(charJson[name])
 
@@ -69,8 +69,10 @@ def buildAncestryJson(array, charJson):
     # file.close()
     return json.dumps(charJson[name], indent=2)
 
-def importHeritages(array, charJson):
+def buildHeritageJson(array, charJson):
     #TODO
+    for line in array:
+        print(line)
     pass
 
 def parseExtras(extras):
@@ -98,6 +100,8 @@ def parseExtras(extras):
 
 def buildAbility(abilities, prev):
     abilityDict = {}
+    if abilities[0].startswith("Heading"):
+        return abilityDict, prev + 1
     ability = abilities.pop(0).split(":")[1].strip()
     abilityDict[ability] = {}
     abilityDict[ability]["description"] = ""
@@ -113,10 +117,13 @@ def buildAbility(abilities, prev):
             #print(f"{abilities[index]}")
             if abilities[index].startswith("trait"):
                 abilityDict[ability]["trait"][abilities[index].split(': ')[1]] = abilities[index + 1].split(": ")[1]
-            if abilities[index].startswith("Heading"):
+            elif abilities[index].startswith("Heading"):
+                index += 1
                 break
-            if abilities[index].startswith("Body:"):
+            elif abilities[index].startswith("Body:"):
                 abilityDict[ability]["description"] += abilities[index].split(":")[1]
+            else:
+                abilityDict[ability]["description"] += abilities[index]
             index += 1
     return abilityDict, index + prev
 
