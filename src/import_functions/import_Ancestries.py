@@ -2,7 +2,6 @@ import json
 
 def buildAncestryJson(array, charJson):
     name = array[4]
-    print(name)
     if "Heritage" in name:
         return buildHeritageJson(array, charJson)
     charJson[name] = {}
@@ -70,11 +69,40 @@ def buildAncestryJson(array, charJson):
     # file.close()
     return json.dumps(charJson[name], indent=2)
 
+# TODO:
 def buildHeritageJson(array, charJson):
-    #TODO
-    for line in array:
-        print(line)
-    pass
+
+    ancestry = array[4].strip(")").split("(")[1].split(" ")[0]
+    name = array[4].split("(")[0].strip()
+    print(f"{name}: {ancestry}")
+    charJson[ancestry]["heritages"][name] = {}
+    charJson[ancestry]["heritages"][name]["source"] = ""
+    charJson[ancestry]["heritages"][name]["description"] = ""
+    charJson[ancestry]["heritages"][name]["short"] = ""
+    write = False
+    description = ""
+    index = 0
+    while index < len(array):
+        if array[index].startswith(f"Heading:{ancestry}"):
+            write = False
+        if array[index].startswith("Source"):
+            write = True
+            if charJson[ancestry]["heritages"][name]["source"] == "":
+                charJson[ancestry]["heritages"][name]["source"] = array[index].strip("Source ")
+            else:
+                charJson[ancestry]["heritages"][name]["description"] = description
+                description = ""
+            index += 1
+        if "eof" in array[index]:
+            charJson[ancestry]["heritages"][name]["short"] = description
+        if write and not array[index].startswith("Ancestry Page"):
+            description += f"{array[index]}\n"
+
+        index += 1
+        #print(array[index])
+    for item in charJson[ancestry]["heritages"][name]:
+        print(f"{item}: {charJson[ancestry]['heritages'][name][item]}")
+    exit()
 
 def parseExtras(extras):
     newDict = {}
@@ -140,3 +168,4 @@ def setUpJson(param):
     param["languages"] = []
     param["addLanguages"] = []
     param["extras"] = {}
+    param["heritages"] = {}

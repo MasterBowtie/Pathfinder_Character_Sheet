@@ -139,6 +139,7 @@ def main():
 
     if debug and heritage:
         testList = []
+        testList.append("Ancestries.aspx?ID=6")
         testList.append("Ancestries.aspx?ID=7")
         for url in testList:
             character = ImportHTML().debugAncestries(url, jsonFile)
