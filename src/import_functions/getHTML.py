@@ -2,7 +2,7 @@ import json
 import sys
 import time
 import requests
-from import_Ancestries import buildAncestryJson
+from import_Ancestries import buildAncestryJson, importHeritage
 
 URL = "https://2e.aonprd.com/"
 
@@ -121,6 +121,15 @@ class ImportHTML():
             character = buildAncestryJson(file, jsonFile)
             return character
 
+    def debugHeritages(self, url, jsonFile):
+        response = requests.get(f"{URL}{url}")
+        if not response.ok:
+            print(f"Error: crawl({URL}{url}) {response.status_code} {response.reason}", file=sys.stderr)
+        else:
+            print(f"Accepted:{URL}{url}")
+            file = self.discectHTML(response.text)
+            importHeritage(file, jsonFile)
+
     # Tests
     # https://2e.aonprd.com/Ancestries.aspx?ID=15
     # https://2e.aonprd.com/Ancestries.aspx?ID=18
@@ -136,14 +145,23 @@ def main():
     debug = True
     heritage = True
     jsonFile = {}
+    jsonFile["Versatile"] = {}
+    jsonFile["Versatile"]["heritages"] = {}
 
     if debug and heritage:
         testList = []
+        testList.append("Ancestries.aspx?ID=1")
         testList.append("Ancestries.aspx?ID=6")
         testList.append("Ancestries.aspx?ID=7")
+        testList.append("Ancestries.aspx?ID=22")
         for url in testList:
-            character = ImportHTML().debugAncestries(url, jsonFile)
-            print(character)
+            ImportHTML().debugAncestries(url, jsonFile)
+        testList = []
+        testList.append("Heritages.aspx?ID=1")
+        testList.append("Heritages.aspx?ID=2")
+        for url in testList:
+            ImportHTML().debugHeritages(url, jsonFile)
+        #print(json.dumps(jsonFile, indent=2))
 
     elif debug and not heritage:
         testList = []

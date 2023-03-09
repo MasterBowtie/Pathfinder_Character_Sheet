@@ -71,38 +71,61 @@ def buildAncestryJson(array, charJson):
 
 # TODO:
 def buildHeritageJson(array, charJson):
-
     ancestry = array[4].strip(")").split("(")[1].split(" ")[0]
     name = array[4].split("(")[0].strip()
-    print(f"{name}: {ancestry}")
+    #print(f"{name}: {ancestry}")
     charJson[ancestry]["heritages"][name] = {}
-    charJson[ancestry]["heritages"][name]["source"] = ""
-    charJson[ancestry]["heritages"][name]["description"] = ""
+    charJson[name] = {}
+    charJson[name]["source"] = ""
+    charJson[name]["description"] = ""
     charJson[ancestry]["heritages"][name]["short"] = ""
+    charJson[ancestry]["heritages"][name]["shortSource"] = ""
     write = False
     description = ""
     index = 0
     while index < len(array):
+        #print(array[index])
         if array[index].startswith(f"Heading:{ancestry}"):
             write = False
         if array[index].startswith("Source"):
             write = True
-            if charJson[ancestry]["heritages"][name]["source"] == "":
-                charJson[ancestry]["heritages"][name]["source"] = array[index].strip("Source ")
+            if charJson[name]["source"] == "":
+                charJson[name]["source"] = array[index].strip("Source ")
             else:
-                charJson[ancestry]["heritages"][name]["description"] = description
+                charJson[ancestry]["heritages"][name]["shortSource"] = array[index].strip("Source ")
+                description += f"See {ancestry} heritages.\n"
+                charJson[name]["description"] = description
                 description = ""
             index += 1
         if "eof" in array[index]:
             charJson[ancestry]["heritages"][name]["short"] = description
         if write and not array[index].startswith("Ancestry Page"):
             description += f"{array[index]}\n"
+        index += 1
+
+
+# TODO
+def importHeritage(array, charJson):
+    ancestry = array[1].split(" ")[0].split(":")[1]
+    name = array[4]
+    print(f"{ancestry}: {name}")
+    item = {}
+    item["feats"] = []
+    item["source"] = ""
+    item["description"] = ""
+    index = 5
+    while index < len(array):
+        if array[index].startswith("Source") and item["source"] == "":
+            item["source"] = array[index].strip("Source ")
+        if array[index].startswith("Heading:Feats"):
+            item["feats"] = array[index+1:len(array) - 1]
+        print(array[index])
 
         index += 1
-        #print(array[index])
-    for item in charJson[ancestry]["heritages"][name]:
-        print(f"{item}: {charJson[ancestry]['heritages'][name][item]}")
-    exit()
+    print("\n\nCharacter")
+    for temp in item:
+        print(f"{temp}: {item[temp]}")
+    charJson[ancestry]["heritages"][name] = item
 
 def parseExtras(extras):
     newDict = {}
