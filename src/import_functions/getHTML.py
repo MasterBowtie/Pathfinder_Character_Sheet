@@ -2,7 +2,7 @@ import json
 import sys
 import time
 import requests
-from import_Ancestries import buildAncestryJson, importHeritage
+from import_functions.import_Ancestries import buildAncestryJson, importHeritage, buildVersatile
 
 URL = "https://2e.aonprd.com/"
 
@@ -20,13 +20,17 @@ class ImportHTML():
         file2 = []
 
         # filter lines...
+        index = 0
         for line in file:
-            if write and "</div>" in line:
+
+            if write and line.strip() == "</div>":
                 write = False
-            if "" != line.strip() and write:
+            if write:
                 file2.append(line.strip())
+                #print(f"{index} {line}")
             if "id=\"main\"" in line:
                 write = True
+            index += 1
 
         string = ""
         for line in file2:
@@ -160,15 +164,23 @@ class ImportHTML():
     # https://2e.aonprd.com/Ancestries.aspx?ID=56
 
 def main():
-    debug = False
-    heritage = False
+    debug = True
+    heritage = True
     jsonFile = {}
-    jsonFile["Versatile"] = {}
-    jsonFile["Versatile"]["heritages"] = {}
+
+    # TODO
+    response = requests.get(f"{URL}Rules.aspx?ID=1417")
+    if not response.ok:
+        print(f"Error: crawl({URL}Rules.aspx?ID=1417) {response.status_code} {response.reason}", file=sys.stderr)
+    else:
+        print(f"Accepted:{URL}Rules.aspx?ID=1417")
+        file = ImportHTML().discectHTML(response.text)
+        buildVersatile(jsonFile, file)
+    exit()
 
     if debug and heritage:
         testList = []
-        #testList.append("Ancestries.aspx?ID=1") #Dwarf
+        testList.append("Ancestries.aspx?ID=1") #Dwarf
         #testList.append("Ancestries.aspx?ID=6") #Human
         #testList.append("Ancestries.aspx?ID=7") #Half-Elf
         #testList.append("Ancestries.aspx?ID=16") #Shoony
@@ -178,15 +190,15 @@ def main():
         for url in testList:
             ImportHTML().debugAncestries(url, jsonFile)
         testList = []
-        #testList.append("Heritages.aspx?ID=1")  #Dwarf
-        #testList.append("Heritages.aspx?ID=2")  #Dwarf
+        testList.append("Heritages.aspx?ID=1")  #Dwarf
+        testList.append("Heritages.aspx?ID=2")  #Dwarf
         #testList.append("Heritages.aspx?ID=54") #Shoony
         #testList.append("Heritages.aspx?ID=82") #Changling
         testList.append("Heritages.aspx?ID=161")  #Conrasu
 
         for url in testList:
             ImportHTML().debugHeritages(url, jsonFile)
-        #print(json.dumps(jsonFile, indent=2))
+        print(json.dumps(jsonFile, indent=2))
 
     elif debug and not heritage:
         testList = []

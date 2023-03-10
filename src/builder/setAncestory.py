@@ -1,13 +1,14 @@
 import random
-from reference.constants import SCORELIST
-from reference.ancestries import ANCESTRIES
+from constants.constants import SCORELIST
+from constants.ancestries import ANCESTRIES
 
 def chooseAncestry():
     sources = []
     for item in ANCESTRIES:
-        source = ANCESTRIES[item]["source"].split("pg")[0]
-        if source not in sources:
-            sources.append(source)
+        if item != "Versatile":
+            source = ANCESTRIES[item]["source"].split("pg")[0]
+            if source not in sources:
+                sources.append(source)
     listBooks(sources)
     resume = False
     selection = []
@@ -71,7 +72,7 @@ def listCharacters(selection):
     choiceList = []
     for book in selection:
         for item in ANCESTRIES:
-            if ANCESTRIES[item]["source"].split("pg")[0] == book:
+            if item != "Versatile" and ANCESTRIES[item]["source"].split("pg")[0] == book:
                 print(f"{count}) {item}")
                 choiceList.append(item)
                 count += 1

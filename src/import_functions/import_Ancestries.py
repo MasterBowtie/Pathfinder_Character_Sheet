@@ -69,7 +69,7 @@ def buildAncestryJson(array, charJson):
     # file.close()
     return json.dumps(charJson[name], indent=2)
 
-# TODO:
+
 def buildHeritageJson(array, charJson):
     ancestry = array[4].strip(")").split("(")[1].split(" ")[0]
     name = array[4].split("(")[0].strip()
@@ -78,6 +78,7 @@ def buildHeritageJson(array, charJson):
     charJson[name] = {}
     charJson[name]["source"] = ""
     charJson[name]["description"] = ""
+    charJson[name]["trait"] = "Versatile"
     charJson[ancestry]["heritages"][name]["short"] = ""
     charJson[ancestry]["heritages"][name]["shortSource"] = ""
     write = False
@@ -104,7 +105,6 @@ def buildHeritageJson(array, charJson):
         index += 1
 
 
-# TODO
 def importHeritage(array, charJson):
     ancestry = array[1].split(" ")[0].split(":")[1]
     name = array[4]
@@ -213,6 +213,16 @@ def buildAbility(abilities, prev):
                 abilityDict[ability]["description"] += f"{abilities[index]}\n"
             index += 1
     return abilityDict, index + prev
+
+# TODO:
+def buildVersatile(jsonFile, array):
+    jsonFile["Versatile"] = {}
+    jsonFile["Versatile"]["heritages"] = {}
+    jsonFile["Versatile"]["description"] = {}
+    jsonFile["Versatile"]["source"] = ""
+    for line in array:
+        print(line)
+
 
 def setUpJson(param):
     param["source"] = ""

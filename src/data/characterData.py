@@ -51,8 +51,8 @@ SPELLINFO = ['Name', 'Level', 'Traits', 'Tradition', ['Cast', 'Actions', 'Compon
 HITPOINTS = ['Class', 'Ancestry', 'Max', 'Current', 'Temporary']
 '''
 from data.skill import Skill
-from reference.constants import SKILLSLIST, SAVES, PROFICIENCYLIST, SCORELIST
-from reference.classConstants import CLASSES
+from constants.constants import SKILLSLIST, SAVES, PROFICIENCYLIST, SCORELIST
+from constants.classConstants import CLASSES
 from data.ancestry import Ancestry
 
 

@@ -3,7 +3,7 @@ from data.characterData import CharacterData
 from builder.setClass import setClass
 from builder.setAncestory import chooseAncestry
 from data.ancestry import Ancestry
-from reference.constants import SCORELIST
+from constants.constants import SCORELIST
 
 
 def newCharacter_old():

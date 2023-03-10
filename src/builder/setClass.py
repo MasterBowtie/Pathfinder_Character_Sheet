@@ -1,7 +1,7 @@
 import random
 
-from reference.constants import SKILLSLIST
-from reference.classConstants import CLASSES
+from constants.constants import SKILLSLIST
+from constants.classConstants import CLASSES
 
 from data.skill import Skill
 

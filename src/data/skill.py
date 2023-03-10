@@ -1,5 +1,5 @@
 import sys
-from reference.constants import SCORELIST, PROFICIENCYLIST
+from constants.constants import SCORELIST, PROFICIENCYLIST
 
 class Skill:
     def __init__(self, name, score, level, scoreValue, armor=False, proficiency="Untrained"):
