@@ -46,11 +46,10 @@ class ImportHTML():
         file2 = ""
         for line in file:
             #print(line)
-            file2 += f"{line}\n"
-            if line.startswith("<span alt="):
-                items = self.parseAltText(line)
-                file2 += f"\ntrait: {items['alt'].split(' ')[0]}\n"
-                file2 += f"\nalt: {items['title']}\n"
+            if "class=\"trait\"" in line:
+                file2 += f"trait:{line}\n"
+            else:
+                file2 += f"{line}\n"
         file = file2.split("\n")
 
         newText = ""
@@ -96,7 +95,9 @@ class ImportHTML():
                 item += char
         return items
 
-    def importAncestries(self, count, target, jsonFile):
+    def importAncestries(self, jsonFile):
+        count = 1
+        target = 60 #approximate amount of Ancestries
         while count < target:
             url = f"Ancestries.aspx?ID={count}"
             try:
@@ -110,6 +111,23 @@ class ImportHTML():
             except Exception as e:
                 print(f"Error: {URL}{url} is not accessible because {e}", file=sys.stderr)
             count += 1
+        count = 1
+        target = 230 #approximate amount of  heritages
+        while count < target:
+            url = f"Heritages.aspx?ID={count}"
+            try:
+                response = requests.get(f"{URL}{url}")
+                if not response.ok:
+                    print(f"Error: crawl({URL}{url}) {response.status_code} {response.reason}", file=sys.stderr)
+                else:
+                    print(f"Accepted:{URL}{url}")
+                    file = self.discectHTML(response.text)
+                    importHeritage(file, jsonFile)
+            except Exception as e:
+                print(f"Error: {URL}{url} is not accessible because {e}", file=sys.stderr)
+            count += 1
+
+
 
     def debugAncestries(self,url, jsonFile):
         response = requests.get(f"{URL}{url}")
@@ -142,46 +160,53 @@ class ImportHTML():
     # https://2e.aonprd.com/Ancestries.aspx?ID=56
 
 def main():
-    debug = True
-    heritage = True
+    debug = False
+    heritage = False
     jsonFile = {}
     jsonFile["Versatile"] = {}
     jsonFile["Versatile"]["heritages"] = {}
 
     if debug and heritage:
         testList = []
-        testList.append("Ancestries.aspx?ID=1")
-        testList.append("Ancestries.aspx?ID=6")
-        testList.append("Ancestries.aspx?ID=7")
-        testList.append("Ancestries.aspx?ID=22")
+        #testList.append("Ancestries.aspx?ID=1") #Dwarf
+        #testList.append("Ancestries.aspx?ID=6") #Human
+        #testList.append("Ancestries.aspx?ID=7") #Half-Elf
+        #testList.append("Ancestries.aspx?ID=16") #Shoony
+        #testList.append("Ancestries.aspx?ID=22") #Changling
+        testList.append("Ancestries.aspx?ID=43") #Conrasu
+
         for url in testList:
             ImportHTML().debugAncestries(url, jsonFile)
         testList = []
-        testList.append("Heritages.aspx?ID=1")
-        testList.append("Heritages.aspx?ID=2")
+        #testList.append("Heritages.aspx?ID=1")  #Dwarf
+        #testList.append("Heritages.aspx?ID=2")  #Dwarf
+        #testList.append("Heritages.aspx?ID=54") #Shoony
+        #testList.append("Heritages.aspx?ID=82") #Changling
+        testList.append("Heritages.aspx?ID=161")  #Conrasu
+
         for url in testList:
             ImportHTML().debugHeritages(url, jsonFile)
         #print(json.dumps(jsonFile, indent=2))
 
     elif debug and not heritage:
         testList = []
-        testList.append("Ancestries.aspx?ID=1")
-        testList.append("Ancestries.aspx?ID=6")
-        testList.append("Ancestries.aspx?ID=16")
-        testList.append("Ancestries.aspx?ID=18")
-        testList.append("Ancestries.aspx?ID=27")
-        testList.append("Ancestries.aspx?ID=38")
-        testList.append("Ancestries.aspx?ID=42")
-        testList.append("Ancestries.aspx?ID=48")
-        testList.append("Ancestries.aspx?ID=49")
-        testList.append("Ancestries.aspx?ID=53")
-        testList.append("Ancestries.aspx?ID=56") #Resolved?
+        #testList.append("Ancestries.aspx?ID=1")
+        #testList.append("Ancestries.aspx?ID=6")
+        #testList.append("Ancestries.aspx?ID=16")
+        #testList.append("Ancestries.aspx?ID=18") #Kobold
+        #testList.append("Ancestries.aspx?ID=27")
+        #testList.append("Ancestries.aspx?ID=38") #Kitsune
+        #testList.append("Ancestries.aspx?ID=42")
+        #testList.append("Ancestries.aspx?ID=48")
+        #testList.append("Ancestries.aspx?ID=49")
+        #testList.append("Ancestries.aspx?ID=53")
+        #testList.append("Ancestries.aspx?ID=56") #Resolved?
         for url in testList:
             character = ImportHTML().debugAncestries(url, jsonFile)
-            #print(character)
+            print(character)
 
     else:
-        ImportHTML().importAncestries(1, 60, jsonFile)
+        ImportHTML().importAncestries(jsonFile)
         time.sleep(5)
         print(f"\nTotal Ancestries: {len(jsonFile)}")
         for character in jsonFile:
