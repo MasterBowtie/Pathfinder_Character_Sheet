@@ -1,0 +1,677 @@
+{
+  "page0": {
+    "scores": {
+      "strength": {},
+      "dexterity": {},
+      "constitution": {},
+      "intelligence": {},
+      "wisdom": {},
+      "charisma": {}
+    },
+    "description": {
+      "character_name": {},
+      "player_name": {},
+      "ancestry": {},
+      "heritage": {},
+      "background": {},
+      "class": {},
+      "size": {},
+      "alignment": {},
+      "traits": {},
+      "deity": {},
+      "experience_points": {},
+      "level": {},
+      "hero_points": {},
+      "speed": {
+        "feet": {},
+        "types": {},
+        "notes": {}
+      }
+    },
+    "armor_class": {
+      "ac": {
+        "bonus": {},
+        "base": 10,
+        "dex": {},
+        "cap": {},
+        "armor_type": {},
+        "prof": {},
+        "item_bonus": {},
+        "equipped_armor": {},
+        "unarmored": {
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "light": {
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "medium": {
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "heavy": {
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        }
+      },
+      "shield": {
+        "bonus": {},
+        "hardness": {},
+        "max_hit_points": {},
+        "broken_threshold": {},
+        "current_hit_points": {}
+      }
+    },
+    "saving_throws": {
+      "fortitude": {
+        "bonus": {},
+        "con": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "reflex": {
+        "bonus": {},
+        "con": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "will": {
+        "bonus": {},
+        "con": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      }
+    },
+    "hit_points": {
+      "max": {},
+      "current": {},
+      "temporary": {},
+      "dying": {},
+      "wounded": {},
+      "resistances_immunities": {},
+      "conditions": {}
+    },
+    "class_dc": {
+      "bonus": {},
+      "base": 10,
+      "key": {
+        "ability": {},
+        "bonus": {}
+      },
+      "proficiency": {
+        "bonus": {},
+        "trained": {},
+        "expert": {},
+        "master": {},
+        "legendary": {}
+      },
+      "item_bonus": {}
+    },
+    "perception": {
+      "bonus": {},
+      "wisdom": {},
+      "proficiency": {
+        "bonus": {},
+        "trained": {},
+        "expert": {},
+        "master": {},
+        "legendary": {}
+      },
+      "item_bonus": {},
+      "senses": {}
+    },
+    "skills": {
+      "acrobatics": {
+        "bonus": {},
+        "dexterity": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {},
+        "armor": {}
+      },
+      "arcana": {
+        "bonus": {},
+        "intelligence": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "athletics": {
+        "bonus": {},
+        "strength": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {},
+        "armor": {}
+      },
+      "crafting": {
+        "bonus": {},
+        "intelligence": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "deception": {
+        "bonus": {},
+        "charisma": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "diplomacy": {
+        "bonus": {},
+        "charisma": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "intimidation": {
+        "bonus": {},
+        "charisma": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "lore1": {
+        "topic": {},
+        "bonus": {},
+        "intelligence": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "lore2": {
+        "topic": {},
+        "bonus": {},
+        "intelligence": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "medicine": {
+        "bonus": {},
+        "wisdom": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "nature": {
+        "bonus": {},
+        "wisdom": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "occultism": {
+        "bonus": {},
+        "intelligence": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "performance": {
+        "bonus": {},
+        "charisma": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "religion": {
+        "bonus": {},
+        "wisdom": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "society": {
+        "bonus": {},
+        "intelligence": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "stealth": {
+        "bonus": {},
+        "dexterity": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {},
+        "armor": {}
+      },
+      "survival": {
+        "bonus": {},
+        "wisdom": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {}
+      },
+      "thievery": {
+        "bonus": {},
+        "dexterity": {},
+        "proficiency": {
+          "bonus": {},
+          "trained": {},
+          "expert": {},
+          "master": {},
+          "legendary": {}
+        },
+        "item_bonus": {},
+        "armor": {}
+      }
+    },
+    "melee_strikes": {
+      "weapon0": {
+        "name": {},
+        "to_hit": {
+          "bonus": {},
+          "strength": {},
+          "proficiency": {
+            "bonus": {},
+            "trained": {},
+            "expert": {},
+            "master": {},
+            "legendary": {}
+          },
+          "item_bonus": {}
+        },
+        "damage": {
+          "strength": {},
+          "dice": {},
+          "type": {
+            "blunt": {},
+            "piercing": {},
+            "slashing": {}
+          },
+          "weapon_special": {},
+          "other": {},
+          "traits": {}
+        }
+      }
+    },
+    "ranged_strikes": {
+      "weapon0": {
+        "name": {},
+        "to_hit": {
+          "bonus": {},
+          "dexterity": {},
+          "proficiency": {
+            "bonus": {},
+            "trained": {},
+            "expert": {},
+            "master": {},
+            "legendary": {}
+          },
+          "item_bonus": {}
+        },
+        "damage": {
+          "special": {},
+          "dice": {},
+          "type": {
+            "blunt": {},
+            "piercing": {},
+            "slashing": {}
+          },
+          "weapon_special": {},
+          "other": {},
+          "traits": {}
+        }
+      }
+    },
+    "weapon_proficiencies": {
+      "simple": {
+        "trained": {},
+        "expert": {},
+        "master": {},
+        "legendary": {}
+      },
+      "martial": {
+        "trained": {},
+        "expert": {},
+        "master": {},
+        "legendary": {}
+      },
+      "other0": {
+        "name": {},
+        "trained": {},
+        "expert": {},
+        "master": {},
+        "legendary": {}
+      },
+      "other1": {
+        "name": {},
+        "trained": {},
+        "expert": {},
+        "master": {},
+        "legendary": {}
+      }
+    },
+    "languages": {}
+  },
+  "page1": {
+    "ancestry_feats_abilities": {
+    },
+    "skill_feats": {},
+    "class_feats_abilities": {},
+    "general_feats": {},
+    "bonus_feats": {},
+    "inventory": {
+      "bulk": {
+        "total": {},
+        "encumbered": {
+          "total": {},
+          "base": 10,
+          "strength": {}
+        },
+        "maximum": {
+          "total": {},
+          "base": 10,
+          "strength": {}
+        }
+      },
+      "money": {
+        "copper": {},
+        "silver": {},
+        "gold": {},
+        "platinum": {}
+      },
+      "items": {
+        "sample": {
+          "worn": {},
+          "readied": {},
+          "other": {},
+          "bulk": {}
+        }
+      }
+    }
+  },
+  "page2": {
+    "character_sketch": {},
+    "description": {
+      "ethnicity": {},
+      "nationality": {},
+      "birthplace": {},
+      "age": {},
+      "gender": {},
+      "height": {},
+      "weight": {},
+      "appearance": {}
+    },
+    "personality": {
+      "attitude": {},
+      "beliefs": {},
+      "likes": {},
+      "dislikes": {},
+      "catchphrases": {}
+    },
+    "campaign_notes": {
+      "allies": {},
+      "enemies": {},
+      "organizations": {},
+      "notes": {}
+    },
+    "actions_activites": {
+      "action0": {
+        "name": {},
+        "actions": {},
+        "traits": {},
+        "page": {},
+        "description": {}
+      }
+    },
+    "free_actions_reactions": {
+      "action0": {
+        "name": {},
+        "free_action": {},
+        "reaction": {},
+        "traits": {},
+        "page": {},
+        "trigger": {},
+        "description": {}
+      }
+    }
+  },
+  "page3": {
+    "spell_attack_roll": {
+      "bonus": {},
+      "key": {
+        "ability": {},
+        "bonus": {}
+      },
+      "proficiency": {
+        "bonus": {},
+        "trained": {},
+        "expert": {},
+        "master": {},
+        "legendary": {}
+      }
+    },
+    "spell_dc": {
+      "bonus": {},
+      "base": 10,
+      "key": {
+        "ability": {},
+        "bonus": {}
+      },
+      "proficiency": {
+        "bonus": {},
+        "trained": {},
+        "expert": {},
+        "master": {},
+        "legendary": {}
+      }
+    },
+    "magic_tradition": {
+      "arcane": {},
+      "occult": {},
+      "primal": {},
+      "divine": {},
+      "prepared": {},
+      "spontaneous": {}
+    },
+    "spell_slots": {
+      "cantrips_level": {},
+      "level1": {
+        "prepared": {},
+        "remaining": {}
+      },
+      "level2": {
+        "prepared": {},
+        "remaining": {}
+      },
+      "level3": {
+        "prepared": {},
+        "remaining": {}
+      },
+      "level4": {
+        "prepared": {},
+        "remaining": {}
+      },
+      "level5": {
+        "prepared": {},
+        "remaining": {}
+      },
+      "level6": {
+        "prepared": {},
+        "remaining": {}
+      },
+      "level7": {
+        "prepared": {},
+        "remaining": {}
+      },
+      "level8": {
+        "prepared": {},
+        "remaining": {}
+      },
+      "level9": {
+        "prepared": {},
+        "remaining": {}
+      },
+      "level10": {
+        "prepared": {},
+        "remaining": {}
+      }
+    },
+    "cantrips": {
+      "sample": {
+        "name": {},
+        "prepared": {},
+        "actions": {},
+        "material": {},
+        "somatic": {},
+        "verbal": {},
+        "description": {}
+      }
+    },
+    "spells": {
+      "sample": {
+        "name": {},
+        "level": {},
+        "prepared": {},
+        "actions": {},
+        "material": {},
+        "somatic": {},
+        "verbal": {},
+        "description": {}
+      }
+    },
+    "innate_spells": {
+      "sample": {
+        "name": {},
+        "frequency": {},
+        "prepared": {},
+        "actions": {},
+        "material": {},
+        "somatic": {},
+        "verbal": {},
+        "description": {}
+      }
+    },
+    "focus_spells": {
+      "focus_points": {
+        "current": {},
+        "maximum": {}
+      },
+      "sample": {
+        "name": {},
+        "prepared": {},
+        "actions": {},
+        "material": {},
+        "somatic": {},
+        "verbal": {},
+        "description": {}
+      }
+    }
+  }
+}
