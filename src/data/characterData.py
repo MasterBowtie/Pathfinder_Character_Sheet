@@ -1,249 +1,204 @@
-'''
-SHIELD = ['Bonus', 'Hardness', 'MaxHP', 'Broken', 'Current']
+# from data.skill import Skill
+# from constants.constants import SKILLSLIST, SAVES, PROFICIENCYLIST, SCORELIST
+# from constants.classConstants import CLASSES
+# from data.ancestry import Ancestry
+import json
 
-
-
-MOVEMENT = ['Land', 'Swim', 'Climb', 'Burrow']
-
-STRIKES = [['Melee',[]],
-           ['Range',[]],
-           ['Magic',[]]]
-
-ATTACKINFO = ['Name', ['Hit', 'Bonus', 'Str', 'Proficiency', 'Item'], ['Dmg', 'dice', 'Str', 'type', 'Special', 'traits']]
-
-FEATS = [['Ancestry', []],
-         ['Skill', []],
-         ['Class', []],
-         ['General', []],
-         ['Bonus', []]]
-
-FEATINFO = ['Name', 'Target', 'Value', 'Description', 'Reference']
-
-EQUIPMENT = [['Money', 'Copper', 'Silver', 'Gold', 'Platinum'],
-             ['Weapons',[]],
-             ['Armor', []],
-             ['Consumables',[]],
-             ['Other', []],
-             'Bulk', 'MaxBulk']
-
-EQUIPMENTINFO = ['Name', 'Type', 'Description', 'Amount', 'Bulk', 'Reference']
-
-SPELLS = ['Tradition',
-          ['Spell Attack', 'Bonus', 'AblMod', 'Proficiency'],
-          ['Spell DC', 'Bonus', 'AblMod', 'Proficiency'],
-          ['Cantrip', 'Level', []],
-          ['Level 1', 'Per Day', []],
-          ['Level 2', 'Per Day', []],
-          ['Level 3', 'Per Day', []],
-          ['Level 4', 'Per Day', []],
-          ['Level 5', 'Per Day', []],
-          ['Level 6', 'Per Day', []],
-          ['Level 7', 'Per Day', []],
-          ['Level 8', 'Per Day', []],
-          ['Level 9', 'Per Day', []],
-          ['Level 10', 'Per Day', []],
-          ['Focus', 'Per Day', []],
-          ['Ritual', 'Per Day', []]]
-
-SPELLINFO = ['Name', 'Level', 'Traits', 'Tradition', ['Cast', 'Actions', 'Components'], ['Target', 'Range'], 'Save', 'Duration', 'Effects', 'Heightened',
-             'Prepared', 'Used', 'Reference']
-
-HITPOINTS = ['Class', 'Ancestry', 'Max', 'Current', 'Temporary']
-'''
-from data.skill import Skill
-from constants.constants import SKILLSLIST, SAVES, PROFICIENCYLIST, SCORELIST
-from constants.classConstants import CLASSES
-from data.ancestry import Ancestry
-
+PROFICIENCIES = ['untrained', 'trained', 'expert', 'master', 'legendary']
+WEAPON = {
+        "name": {},
+        "to_hit": {
+          "score": None,
+          "proficiency": "untrained",
+          "item_bonus": 0
+        },
+        "damage": {
+          "special": 0,
+          "dice": {
+            "number": 0,
+            "size": 0
+          },
+          "type": {
+            "blunt": 0,
+            "piercing": 0,
+            "slashing": 0
+          },
+          "weapon_special": 0,
+          "other": {},
+          "traits": {}
+        }
+      }
 
 class CharacterData:
-    def __init__(self, ancestry: Ancestry):
-        self.__Scores = {}
-        for item in SCORELIST:
-            self.__Scores[item] = 10
+    def __init__(self):
+        self.__character = None
+        file = open("characterSheet.json")
+        self.__character = json.load(file)
+        file.close()
+        #print(json.dumps(self.__character, indent=2))
 
-        self.__Ancestry = ancestry
-        self.__Background = None
-        self.__Class = None
-        self.__HitPoints = 0
-
-        self.__Level = 0
-        self.__ExperiencePoints = 0
-        self.__KeyScore = None
-        self.__ClassDC = None
-
-        self.__armorClass = {"DexCap": None, "Proficiency": 0, "Item": 0, "Shield": 0}
-        self.__armorProf = {"Unarmored": "Untrained", "Light": "Untrained", "Medium": "Untrained", "Heavy": "Untrained"}
-        self.__attackProf = {"Unarmored": "Untrained", "Simple":"Untrained", "Martial":"Untrained"}
-
-        self.__Saves = []
-        self.__Skills = []
-        self.__Melee = []
-        self.__Range = []
-
-        self.__Finished = False
-        self.__buildNewCharacter()
-
-    def __buildNewCharacter(self):
-        for skill in SKILLSLIST:
-            if len(skill) == 3:
-                armor = True
-            else:
-                armor = False
-
-            self.__Skills.append(Skill(skill[0], skill[1], self.__Level, self.__Scores.get(skill[1]), armor))
-
-        for save in SAVES:
-            self.__Saves.append(Skill(save[0], save[1], self.__Level, self.__Scores.get(save[1])))
-
+        # self.__strength = self.__character["page0"]["scores"]["strength"]
+        # self.__dexterity = self.__character["page0"]["scores"]["dexterity"]
+        # self.__constitution = self.__character["page0"]["scores"]["constitution"]
+        # self.__intelligence = self.__character["page0"]["scores"]["intelligence"]
+        # self.__wisdom = self.__character["page0"]["scores"]["wisdom"]
+        # self.__charisma = self.__character["page0"]["scores"]["charisma"]
 
     ### Class Section ###
     def getClass(self):
-        return self.__Class
+        return self.__character["page0"]["description"]["class"]
 
     def getAncestry(self):
-        return self.__Ancestry.getAncestry()
+        return self.__character["page0"]["description"]["ancestry"]
 
     def setClass(self, value):
-        self.__Class = value
+        if value is str:
+            self.__character["page0"]["description"]["class"] = value
+        else:
+            print("This is not a valid input")
+
+    def getProficiency(self, value):
+        if value == "untrained":
+            return 0
+        if value == "trained":
+            return 2 + self.__character["page0"]["description"]["level"]
+        if value == "expert":
+            return 4 + self.__character["page0"]["description"]["level"]
+        if value == "master":
+            return 6 + self.__character["page0"]["description"]["level"]
+        if value == "legendary":
+            return 8 + self.__character["page0"]["description"]["level"]
+        return -1
 
     ### Armor Section ###
+    def equipArmor(self):
+        pass
 
-    def equipArmor(self, dexCap, type, item):
-        self.__armorClass["DexCap"] = int(dexCap)
-        self.__armorClass["Item"] = int(item)
-        if type in self.__armorProf:
-            proficiency = self.__armorProf[type]
-        else:
-            raise NameError("That is not a valid armor type: " + str(type))
-        if self.__armorProf == "Untrained":
-            self.__armorClass["Proficiency"] = 0
-        else:
-            self.__armorClass["Proficiency"] = PROFICIENCYLIST[proficiency] + self.__Level
-
-    def equipShield(self, shield):
-        self.__armorClass["Shield"] = int(shield)
+    def equipShield(self):
+        pass
 
     def unequipArmor(self):
-        self.__armorClass["DexCap"] = None
-        self.__armorClass["Item"] = 0
-        if self.__armorProf["Unarmored"] == "Untrained":
-            self.__armorClass["Proficiency"] = 0
-        else:
-            self.__armorClass["Proficiency"] = PROFICIENCYLIST[self.__armorProf["Unarmored"]] + self.__Level
+        pass
 
     def getArmorClass(self):
-        if self.__armorClass["DexCap"] is None:
-            DexBonus = (self.__Scores["Dex"] - 10) // 2
-        elif self.__armorClass["DexCap"] > (self.__Scores["Dex"] - 10) // 2:
-            DexBonus = (self.__Scores["Dex"] - 10) // 2
-        else:
-            DexBonus = self.__armorClass["DexCap"]
-
-        return 10 + DexBonus + self.__armorClass["Proficiency"] + self.__armorClass["Item"]
+        pass
 
     def getArmorProf(self):
-        return self.__armorProf
+        pass
 
     ### Scores ###
-
     def getScore(self, score):
-        if score not in self.__Scores:
+        if score not in self.__character["page0"]["scores"]:
             raise NameError("Score could not be found: '" + str(score) + "'")
-        return self.__Scores.get(score)
+        return self.__character["page0"]["scores"][score]
 
     def setScore(self, score, newValue):
-        if score in self.__Scores:
-            self.__Scores[score] = newValue
+        score = score.lower()
+        if score in self.__character["page0"]["scores"]:
+            self.__character["page0"]["scores"][score] = newValue
         else:
             raise NameError(f"Attribute could not be found: '{score}'")
-        if self.__Finished:
-            self.__updateSheets()
-
-    def setKeyScore(self, score):
-        if score in self.__Scores:
-            self.__KeyScore = score
-        else:
-            raise NameError(f"Attribute could not be found: '{score}'")
-
-    def getKeyScore(self):
-        return self.__KeyScore
 
     def printScores(self):
-        for score in self.__Scores:
-            print(score, ":{:>3}".format(self.__Scores.get(score)))
-
-    def getFortitude(self):
-        return self.__Saves[0]
-
-    def getReflex(self):
-        return self.__Saves[1]
-
-    def getWill(self):
-        return self.__Saves[2]
-
-    ### Skills ###
-
-    def printSkills(self):
-        for skill in self.__Skills:
-            print("{:<14}".format(str(skill.getSkill())) + ":{:>3}".format(str(skill.getBonus())))
+        for score in self.__character["page0"]["scores"]:
+            print(f"{score[0:3].capitalize():>4}: {self.__character['page0']['scores'][score]}")
 
     def printSaves(self):
-        for save in self.__Saves:
-            print("{:<10}".format(str(save.getSkill())) + ":{:>3}".format(str(save.getBonus())))
+        for save in self.__character["page0"]["saving_throws"]:
+            bonus = self.getSave(save)
+            print(f"{save.capitalize(): >10}: {bonus}")
 
-    def searchSkills(self, value):
-        for skill in self.__Skills:
-            if value == skill.getSkill():
-                return skill
-        return None
+    def getSave(self, save):
+        score = (self.__character["page0"]["scores"][self.__character["page0"]["saving_throws"][save]["score"]] - 10) // 2
+        # print(f"Score Modifier: {score}")
+        proficiency = self.getProficiency(self.__character["page0"]["saving_throws"][save]["proficiency"])
+        # print(f"Proficency Bonus: {self.__character['page0']['saving_throws'][save]['proficiency']} -> {proficiency}")
+        bonus = self.__character["page0"]["saving_throws"][save]["item_bonus"]
+        # print(f"Item Bonus: {self.__character['page0']['saving_throws'][save]['item_bonus']}")
+        return score + proficiency + bonus
+
+    def setSaveProficiency(self, save, proficiency):
+        save = save.lower()
+        proficiency = proficiency.lower()
+        if save in self.__character["page0"]["saving_throws"] and proficiency in PROFICIENCIES:
+            self.__character["page0"]["saving_throws"][save]["proficiency"] = proficiency
+
+
+
+
+    ### Skills ###
+    def getSkill(self, skill):
+        score = (self.__character["page0"]["scores"][
+                     self.__character["page0"]["skills"][skill]["score"]] - 10) // 2
+        # print(f"Score Modifier: {score}")
+        proficiency = self.getProficiency(self.__character["page0"]["skills"][skill]["proficiency"])
+        # print(f"Proficency Bonus: {self.__character['page0']['saving_throws'][save]['proficiency']} -> {proficiency}")
+        bonus = self.__character["page0"]["skills"][skill]["item_bonus"]
+        # print(f"Item Bonus: {self.__character['page0']['saving_throws'][save]['item_bonus']}")
+        return score + proficiency + bonus
+
+    def setSkillProficiency(self, skill, proficiency):
+        skill = skill.lower()
+        proficiency = proficiency.lower()
+        if skill in self.__character["page0"]["skills"] and proficiency in PROFICIENCIES:
+            self.__character["page0"]["skills"][skill]["proficiency"] = proficiency
+
+    def printSkills(self):
+        for skill in self.__character['page0']['skills']:
+            if "lore" in skill:
+                string = skill[:-1].capitalize() + "(" + self.__character['page0']['skills'][skill]['topic'] + ")"
+
+                print(f"{string: >20}: {self.getSkill(skill)}")
+            else:
+                print(f"{skill.capitalize(): >20}: {self.getSkill(skill)}")
+
 
     def getClassDC(self):
-        return self.__ClassDC
+        return self.__character["page0"]["class_dc"]
 
-    def setClassDC(self, value):
-        self.__ClassDC = value
 
-    def getAttackProf(self):
-        return self.__attackProf
+    def setClassDCAbility(self, value):
+        # TODO:
+        pass
+
 
     ### Level and XP ####
+    def addHP(self, value):
+        self.__character["page0"]["hit_points"]["current"] += value
 
-    def setHP(self):
-        hp = self.__Ancestry.getHP()
-        hp += CLASSES.get(self.getClass())[1] * self.getLevel()
-        # TODO: Add feat Bonus Option
-        self.__HitPoints = hp
 
-    def getHP(self):
-        return self.__HitPoints
+    def getCurrentHP(self):
+        return self.__character["page0"]["hit_points"]["current"]
+
+    def getMaxHP(self):
+        return self.__character["page0"]["hit_points"]["max"]
 
     def levelUp(self):
-        return  # TODO:
-
-    def finished(self):
-        self.__Finished = not self.__Finished
-        self.__updateSheets()
+        pass
+        #TODO:
 
     def getLevel(self):
-        return self.__Level
-
-    def setLevel(self, newValue):
-        self.__Level = newValue
-
-    def __updateSheets(self):
-        for skill in self.__Skills:
-            skill.setLevel(self.__Level)
-            skill.setScoreValue(self.__Scores[skill.getScore()])
-        for save in self.__Saves:
-            save.setLevel(self.__Level)
-            save.setScoreValue(self.__Scores[save.getScore()])
-        self.setHP()
+        return self.__character["page0"]["description"]["level"]
 
     def addXP(self, XP):
-        self.__ExperiencePoints += XP
-        if self.__ExperiencePoints > 1000:
-            self.__ExperiencePoints -= 1000
+        self.__character["page0"]["description"]["experience_points"] += XP
+        if self.__character["page0"]["description"]["experience_points"] > 1000:
+            self.__character["page0"]["description"]["experience_points"] -= 1000
             self.levelUp()
 
     ### Weapons ###
+if __name__ == "__main__":
+    character = CharacterData()
+    character.setScore("strength", 18)
+    character.setScore("dexterity", 14)
+    character.setScore("constitution", 16)
+    character.setScore("intelligence", 10)
+    character.setScore("wisdom", 12)
+    character.setScore("charisma", 8)
+    character.setSaveProficiency("fortitude", "expert")
+    character.setSkillProficiency("thievery", "EXPERT")
+    character.printScores()
+    print()
+    character.printSaves()
+    print()
+    character.printSkills()
