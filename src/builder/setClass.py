@@ -1,9 +1,7 @@
 import random
 
-from constants.constants import SKILLSLIST
-from constants.classConstants import CLASSES
-
-from data.skill import Skill
+from src.constants.constants import SKILLSLIST
+from src.constants.classConstants import CLASSES
 
 
 # TODO: set up for Sorcerer Bloodlines, Rogue Racket, Fighter Skill, Druidic Order,
@@ -63,9 +61,6 @@ def setClass(character, selected, randomize=False):
     armorProf["Light"] = info[6][1]
     armorProf["Medium"] = info[6][2]
     armorProf["Heavy"] = info[6][3]
-
-
-    character.setClassDC(Skill("Class DC", score, character.getLevel(), character.getScore(score), proficiency="Trained"))
 
     return True
 

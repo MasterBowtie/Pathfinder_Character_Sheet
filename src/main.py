@@ -1,4 +1,7 @@
 from builder.newCharacter import newCharacter
+from data import characterData
+import json
+from data.characterData import CharacterData
 
 '''
 Tommy's review
@@ -20,5 +23,19 @@ Priority:
 '''
 
 if __name__ == '__main__':
-    newCharacter()
-    pass
+    character = CharacterData()
+    character.setScore("strength", 18)
+    character.setScore("dexterity", 14)
+    character.setScore("constitution", 16)
+    character.setScore("intelligence", 10)
+    character.setScore("wisdom", 12)
+    character.setScore("charisma", 8)
+    character.setSaveProficiency("fortitude", "expert")
+    character.setSkillProficiency("thievery", "EXPERT")
+    character.printScores()
+    print()
+    character.printSaves()
+    print()
+    character.printSkills()
+    character.addWeapon("Melee", "Mace", "Strength", 1, 6, "Trained", "B", 0, 1, traits="Shove", descripton="This is the weapon descritption")
+    character.printMeleeWeapons()

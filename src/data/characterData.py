@@ -1,38 +1,12 @@
-# from data.skill import Skill
-# from constants.constants import SKILLSLIST, SAVES, PROFICIENCYLIST, SCORELIST
-# from constants.classConstants import CLASSES
-# from data.ancestry import Ancestry
+from src.constants.constants import PROFICIENCIES, WEAPON, SCORELIST
+import copy
 import json
 
-PROFICIENCIES = ['untrained', 'trained', 'expert', 'master', 'legendary']
-WEAPON = {
-        "name": {},
-        "to_hit": {
-          "score": None,
-          "proficiency": "untrained",
-          "item_bonus": 0
-        },
-        "damage": {
-          "special": 0,
-          "dice": {
-            "number": 0,
-            "size": 0
-          },
-          "type": {
-            "blunt": 0,
-            "piercing": 0,
-            "slashing": 0
-          },
-          "weapon_special": 0,
-          "other": {},
-          "traits": {}
-        }
-      }
 
 class CharacterData:
     def __init__(self):
         self.__character = None
-        file = open("characterSheet.json")
+        file = open("constants/characterSheet.json")
         self.__character = json.load(file)
         file.close()
         #print(json.dumps(self.__character, indent=2))
@@ -72,18 +46,23 @@ class CharacterData:
 
     ### Armor Section ###
     def equipArmor(self):
+        # TODO:
         pass
 
     def equipShield(self):
+        # TODO:
         pass
 
     def unequipArmor(self):
+        # TODO:
         pass
 
     def getArmorClass(self):
+        # TODO:
         pass
 
     def getArmorProf(self):
+        # TODO:
         pass
 
     ### Scores ###
@@ -187,18 +166,49 @@ class CharacterData:
             self.levelUp()
 
     ### Weapons ###
-if __name__ == "__main__":
-    character = CharacterData()
-    character.setScore("strength", 18)
-    character.setScore("dexterity", 14)
-    character.setScore("constitution", 16)
-    character.setScore("intelligence", 10)
-    character.setScore("wisdom", 12)
-    character.setScore("charisma", 8)
-    character.setSaveProficiency("fortitude", "expert")
-    character.setSkillProficiency("thievery", "EXPERT")
-    character.printScores()
-    print()
-    character.printSaves()
-    print()
-    character.printSkills()
+
+    def setWeaponTypeProficiency(self, weapon_type, proficiency):
+        if proficiency in PROFICIENCIES:
+            if weapon_type in self.__character["page0"]["weapon_proficiencies"]:
+                self.__character["page0"]["weapon_proficiencies"][weapon_type] = proficiency
+            elif weapon_type == self.__character["page0"]["weapon_proficiencies"]["other0"]["name"]:
+                self.__character["page0"]["weapon_proficiencies"]["other0"]["proficiency"] = proficiency
+            elif weapon_type == self.__character["page0"]["weapon_proficiencies"]["other1"]["name"]:
+                self.__character["page0"]["weapon_proficiencies"]["other1"]["proficiency"] = proficiency
+
+    def addWeapon(self, attack_type, name, score, dice_number, dice_size, proficiency, weapon_types, item_bonus=0, bulk=0, weapon_special=0, traits="", descripton=""):
+        weapon = copy.deepcopy(WEAPON)
+        weapon["name"] = name
+        if score.lower() in SCORELIST:
+            weapon["to_hit"]["score"] = score.lower()
+        if proficiency.lower() in PROFICIENCIES:
+            weapon["to_hit"]["proficiency"] = proficiency.lower()
+        weapon["to_hit"]["item_Bonus"] = item_bonus
+        weapon["damage"]["dice"]["number"] = dice_number
+        weapon["damage"]["dice"]["size"] = dice_size
+        weapon["damage"]["weapon_special"] = weapon_special
+        weapon_types = weapon_types.split("/")
+        for w_type in weapon_types:
+            if w_type in weapon["damage"]["type"]:
+                weapon["damage"]["type"][w_type] = 1
+        weapon["attack_type"] = attack_type
+        weapon["bulk"] = bulk
+        weapon["traits"] = traits
+        weapon["description"] = descripton
+        if attack_type == "melee":
+            self.__character['page0']['melee_strikes'].append(weapon)
+        if attack_type == "ranged":
+            self.__character['page0']['ranged_strikes'].append(weapon)
+        self.__character["page0"]["melee_strikes"].append(weapon)
+
+    def printMeleeWeapons(self):
+        # print(json.dumps(self.__character["page0"]["melee_strikes"], indent=2))
+        for weapon in range(len(self.__character["page0"]["melee_strikes"])):
+            name = self.__character["page0"]["melee_strikes"][weapon]["name"]
+            score = (self.__character["page0"]["scores"][self.__character["page0"]["melee_strikes"][weapon]["to_hit"]["score"]] - 10) // 2
+            proficiency = self.getProficiency(self.__character["page0"]["melee_strikes"][weapon]["to_hit"]["proficiency"])
+            item_bonus = self.__character["page0"]["melee_strikes"][weapon]["to_hit"]["item_bonus"]
+            toHit = score + proficiency + item_bonus
+            damage = f"{self.__character['page0']['melee_strikes'][weapon]['damage']['dice']['number']}d{self.__character['page0']['melee_strikes'][weapon]['damage']['dice']['size']}"
+
+            print(f"{name}: {toHit} {damage}")

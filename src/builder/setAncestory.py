@@ -1,6 +1,6 @@
 import random
-from constants.constants import SCORELIST
-from constants.ancestries import ANCESTRIES
+from src.constants.constants import SCORELIST
+from src.constants.ancestries import ANCESTRIES
 
 def chooseAncestry():
     sources = []

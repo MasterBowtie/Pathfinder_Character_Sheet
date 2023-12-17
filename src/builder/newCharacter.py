@@ -1,9 +1,9 @@
 from src.constants.classConstants import LEVELING
-from data.characterData import CharacterData
-from builder.setClass import setClass
-from builder.setAncestory import chooseAncestry
-from data.ancestry import Ancestry
-from constants.constants import SCORELIST
+from src.data.characterData import CharacterData
+from src.builder.setClass import setClass
+from src.builder.setAncestory import chooseAncestry
+from src.data.ancestry import Ancestry
+from src.constants.constants import SCORELIST
 
 
 def newCharacter_old():

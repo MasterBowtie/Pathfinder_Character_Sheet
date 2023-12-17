@@ -1,30 +1,55 @@
 
-SCORELIST = ["Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma"]
+SCORELIST = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
 
-PROFICIENCYLIST = {"Untrained": 0, "Trained": 2, "Expert": 4, "Master": 6, "Legendary": 8}
+PROFICIENCIES = ['untrained', 'trained', 'expert', 'master', 'legendary']
 
-SKILLSLIST = [['Acrobatics', 'Dexterity', 'armor'],
-          ['Arcana', 'Intelligence'],
-          ['Athletics', 'Strength', 'armor'],
-          ['Crafting', 'Intelligence'],
-          ['Deception', 'Charisma'],
-          ['Diplomacy', 'Charisma'],
-          ['Intimidation', 'Charisma'],
-          ['Lore', 'Intelligence'],
-          ['Lore', 'Intelligence'],
-          ['Medicine', 'Wisdom'],
-          ['Nature', 'Wisdom'],
-          ['Occultism', 'Intelligence'],
-          ['Perception', 'Wisdom'],
-          ['Performance', 'Charisma'],
-          ['Religion', 'Wisdom'],
-          ['Society', 'Intelligence'],
-          ['Stealth', 'Dexterity', 'armor'],
-          ['Survival', 'Wisdom'],
-          ['Thievery', 'Dexterity', 'armor']]
+SKILLSLIST = [
+    'acrobatics',
+    'arcana',
+    'athletics',
+    'crafting',
+    'deception',
+    'diplomacy',
+    'intimidation',
+    'lore0',
+    'lore1',
+    'medicine',
+    'nature',
+    'occultism',
+    'perception',
+    'performance',
+    'religion',
+    'society',
+    'stealth',
+    'survival',
+    'thievery']
 
-SAVES = [['Fortitude', 'Constitution'],
-         ['Reflex', 'Dexterity'],
-         ['Will', 'Wisdom']]
+SAVES = ['fortitude', 'reflex', 'will']
 
-ARMORTYPES = ['Unarmored', 'Light', 'Medium', 'Heavy']
+ARMORTYPES = ['unarmored', 'light', 'medium', 'heavy']
+
+WEAPON = {
+    "name": "",
+    "to_hit": {
+        "score": None,
+        "proficiency": "untrained",
+        "item_bonus": 0
+    },
+    "damage": {
+        "dice": {
+            "number": 0,
+            "size": 0
+        },
+        "type": {
+            "blunt": 0,
+            "piercing": 0,
+            "slashing": 0
+        },
+        "weapon_special": 0,
+    },
+    "attack_type": "",
+    "other": "",
+    "traits": "",
+    "bulk": 0,
+    "description": ""
+}

@@ -203,8 +203,15 @@
     "weapon_proficiencies": {
       "simple": "untrained",
       "martial": "untrained",
-      "other0": "untrained",
-      "other1": "untrained"
+      "unarmed": "untrained",
+      "other0": {
+        "proficiency":"untrained",
+        "name": ""
+      },
+      "other1": {
+        "proficiency":"untrained",
+        "name": ""
+      }
     },
     "languages": {}
   },
