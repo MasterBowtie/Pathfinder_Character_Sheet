@@ -1,4 +1,8 @@
 import requests
+from bs4 import BeautifulSoup
+import brotli #required for request decryption
+from urllib.parse import urlparse, urljoin
+
 import json
 
 
@@ -23,41 +27,75 @@ def editDescription(name, description):
 
 
 # This make an API call for Ancestries
-def fetchAncestries(relPath):
+# def fetchAncestries(relPath):
+    # print("Fetching Ancestries...")
+    # try:
+    #     URL = "https://api.pathfinder2.fr/v1/pf2"
+    #     file = open(f"{relPath}Pathfinder_API.txt")
+    #     API_KEY = file.read()
+    #     file.close()
+    #     HEADERS = {'Authorization': API_KEY}
+    #     r = requests.get(f"{URL}/ancestry", headers=HEADERS)
+    #     print("Connecting")
+
+    #     # This loads all the results into local json format
+    #     ancestryList = {}
+    #     for item in r.json()["results"]:
+    #         # send it over to clean up and remove HTML junk
+    #         name = item['name']
+    #         item["system"]["description"] = editDescription(name,
+    #                                                         item["system"]["description"]["value"].replace('\u2011',
+    #                                                                                                        ""))
+    #         ancestryList[name] = item
+    #     file = open(f"{relPath}ancestries.py", "w")
+
+    #     # This saves all the local jsons into a single referable file
+    #     string = "ANCENTRIES = {"
+    #     for item in ancestryList:
+    #         temp = json.dumps(ancestryList[item], indent=3).replace('true', 'True').replace('false', 'False')
+    #         string += f"\"{item}\": {temp},\n"
+    #     string += "}"
+    #     print(string, file=file)
+    #     file.close()
+
+    # except:
+    #     print("Cannot Connect")
+
+
+def fetchAncestries():
     print("Fetching Ancestries...")
+    ancestries = []
     try:
-        URL = "https://api.pathfinder2.fr/v1/pf2"
-        file = open(f"{relPath}Pathfinder_API.txt")
-        API_KEY = file.read()
-        file.close()
-        HEADERS = {'Authorization': API_KEY}
-        r = requests.get(f"{URL}/ancestry", headers=HEADERS)
-        print("Connecting")
+        URL = "https://2e.aonprd.com"
+        TARGET = "Ancestries.aspx"
+        response = requests.get(f"{URL}/{TARGET}")
+        if not response.ok:
+            print("A problem was encountered")
 
-        # This loads all the results into local json format
-        ancestryList = {}
-        for item in r.json()["results"]:
-            # send it over to clean up and remove HTML junk
-            name = item['name']
-            item["system"]["description"] = editDescription(name,
-                                                            item["system"]["description"]["value"].replace('\u2011',
-                                                                                                           ""))
-            ancestryList[name] = item
-        file = open(f"{relPath}ancestries.py", "w")
+        html = BeautifulSoup(response.text, "html.parser")
+        links = html.find_all("a")
+        print(len(links))
+        for a in links:
+            link = a.get("href")
+            if isinstance(link, str) and link.startswith(TARGET) and link not in ancestries:
+                ancestries.append(link)
 
-        # This saves all the local jsons into a single referable file
-        string = "ANCENTRIES = {"
-        for item in ancestryList:
-            temp = json.dumps(ancestryList[item], indent=3).replace('true', 'True').replace('false', 'False')
-            string += f"\"{item}\": {temp},\n"
-        string += "}"
-        print(string, file=file)
-        file.close()
+        for i in range(2,3):
+            response = requests.get(f"{URL}/{ancestries[i]}")
+            print(response.url)
+            html = BeautifulSoup(response.text, "html.parser")
+            main = html.find(id="main")
+            for string in main.strings:
+                print(string)
 
-    except:
-        print("Cannot Connect")
 
+
+
+
+    except Exception as e:
+        print(f"Print Cannot Connect\n{e}")
 
 
 if __name__ == "__main__":
-    fetchAncestries("")
+    fetchAncestries()
+
