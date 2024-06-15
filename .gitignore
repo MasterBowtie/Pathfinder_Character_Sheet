@@ -10,3 +10,5 @@ __pycache__
 *~
 Pathfinder_API.txt
 temp.txt
+.vscode/
+.env
