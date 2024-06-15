@@ -60,40 +60,84 @@ def editDescription(name, description):
 
     # except:
     #     print("Cannot Connect")
-
+URL = "https://2e.aonprd.com"
+TARGET = "Ancestries.aspx"
 
 def fetchAncestries():
     print("Fetching Ancestries...")
-    ancestries = []
-    try:
-        URL = "https://2e.aonprd.com"
-        TARGET = "Ancestries.aspx"
-        response = requests.get(f"{URL}/{TARGET}")
+    
+    response = requests.get(f"{URL}/{TARGET}")
+    if not response.ok:
+        print("A problem was encountered")
+
+    html = BeautifulSoup(response.text, "html.parser")
+    links = html.find_all("a")
+    ancestryIDs = getAncestryLinks(links)
+
+    for i in range(1,3):
+        response = requests.get(f"{URL}/{TARGET}?{ancestryIDs[i]}")
         if not response.ok:
             print("A problem was encountered")
+        parseAncestryHTML(f"{TARGET}?{ancestryIDs[i]}", BeautifulSoup(response.text, "html.parser"))
 
-        html = BeautifulSoup(response.text, "html.parser")
-        links = html.find_all("a")
-        print(len(links))
-        for a in links:
-            link = a.get("href")
-            if isinstance(link, str) and link.startswith(TARGET) and link not in ancestries:
-                ancestries.append(link)
+            
 
-        for i in range(2,3):
-            response = requests.get(f"{URL}/{ancestries[i]}")
-            print(response.url)
-            html = BeautifulSoup(response.text, "html.parser")
-            main = html.find(id="main")
-            for string in main.strings:
-                print(string)
+def getAncestryLinks(links):
+    ancestryIDs = []
+    for a in links:
+        link = a.get("href")
+        if isinstance(link, str) and link.startswith(TARGET):
+            ids = link.split("?")
+            if (len(ids) == 2 and ids[1].startswith("ID") and ids[1] not in ancestryIDs):
+                ancestryIDs.append(ids[1])
+    return ancestryIDs
+
+def parseAncestryHTML(url, html):
+    query = {
+        "A_name": "",
+        "A_size": "",
+        "traits": "",
+        "health": 0,
+        "speed": 0,
+        "A_description": "",
+        "languages": "",
+        "senses": "",
+        "source": ""
+    }
+    score = {
+        "strength": 0,
+        "dexterity": 0,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0,
+        "free": 0
+    }
+
+    file = open("textFile","w")
+    print(html, file=file)
+    file.close()
+
+    links = html.find_all("a")
+    for a in links:
+        link = a.get("href")
+    
+    # Get the Name
+        if link == url and not "Details" in a.get_text():
+            query["A_name"] = a.get_text()
+    # Get the Source
+        if "class" in a.attrs and a["class"][0] == "external-link":
+            query["source"] = a.get_text()
 
 
+    # Get the traits
+    traitsClass = html.find_all(class_="trait")
+    traits = []
+    for trait in traitsClass:
+        traits.append(trait.get_text())
+    query["traits"] = ",".join(traits)
 
-
-
-    except Exception as e:
-        print(f"Print Cannot Connect\n{e}")
+    print(json.dumps(query, indent=2))
 
 
 if __name__ == "__main__":
