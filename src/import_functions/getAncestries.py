@@ -11,7 +11,7 @@ load_dotenv()
 URL = "https://2e.aonprd.com"
 TARGET = "Ancestries.aspx"
 MY_DB = mysql.connector.connect(
-    host="localhost",
+    host=os.getenv("DB_HOST"),
     user=os.getenv("DB_USERNAME"),
     password=os.getenv("DB_PASSWORD"),
     database="Pathfinder"
@@ -166,6 +166,8 @@ def insertToDatabase(ancestries, scores):
 
     sql = "SELECT * FROM ancestries WHERE A_name = %s"
     mycursor.execute(sql, [ancestries["A_name"]])
+
+    # If no referece found, add to the Database
     if len(mycursor.fetchall()) == 0:
         #build string for scores insert
         sql = "INSERT INTO scores (" + ", ".join(list(scores.keys())) + ") VALUES (" + "%s, "*(len(scores.keys()) - 1) + "%s)"
@@ -183,10 +185,10 @@ def insertToDatabase(ancestries, scores):
             print("Oops!")
             print(json.dumps(ancestries, indent=2))
 
-
         MY_DB.commit()
-
         print(ancestries["A_name"], "record inserted.")
+
+    #If name found, update the ancestry instead.
     else:
 
         sql = "UPDATE ancestries (" + ", ".join(list(ancestries.keys())) + ") VALUES (" + "%s, "*(len(ancestries.keys()) - 1) + "%s) WHERE A_name = %s"

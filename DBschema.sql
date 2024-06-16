@@ -31,3 +31,14 @@ CREATE TABLE Ancestries(
     abilities TEXT,
     source VARCHAR(255) NOT NULL
 );
+
+DROP TABLE IF EXISTS Feats;
+
+CREATE TABLE Feats(
+    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL;
+    F_name VARCHAR(255) UNIQUE NOT NULL,
+    F_description TEXT NOT NULL,
+    traits TEXT NOT NULL,
+    source VARCHAR(255) NOT NULL,
+    F_level INT NOT NULL
+);
